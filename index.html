@@ -175,6 +175,13 @@
             margin-top: 20px;
             font-size: 0.9rem;
         }
+        
+        .error-msg {
+            color: var(--negative);
+            font-size: 0.85rem;
+            text-align: center;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -183,7 +190,7 @@
         <p class="subtitle">Global Finance Brief · 實時跳動</p>
         <span class="live-badge">
             <span class="live-dot"></span>
-            🔴 LIVE 實時數據 · 每 30 秒更新
+            🔴 LIVE 實時數據
         </span>
     </header>
 
@@ -191,7 +198,7 @@
         <section class="section">
             <div class="section-header">
                 <span style="font-size: 1.8rem;">🌍</span>
-                <h2 class="section-title">環球指數 - 實時跳動</h2>
+                <h2 class="section-title">環球指數</h2>
             </div>
             
             <div class="market-grid">
@@ -233,12 +240,13 @@
             </div>
             
             <p class="last-update" id="last-update">更新中...</p>
+            <p class="error-msg" id="error-msg"></p>
         </section>
 
         <section class="section">
             <div class="section-header">
                 <span style="font-size: 1.8rem;">₿</span>
-                <h2 class="section-title">加密貨幣 - 實時</h2>
+                <h2 class="section-title">加密貨幣</h2>
             </div>
             
             <div class="market-grid">
@@ -265,13 +273,13 @@
         <section class="section">
             <div class="section-header">
                 <span style="font-size: 1.8rem;">🛢️</span>
-                <h2 class="section-title">大宗商品 - 實時</h2>
+                <h2 class="section-title">大宗商品</h2>
             </div>
             
             <div class="market-grid">
                 <div class="market-card">
                     <div class="market-header">
-                        <span class="market-name">🥇 現貨黃金</span>
+                        <span class="market-name">🥇 黃金</span>
                         <span class="loading" id="gold-loading"></span>
                     </div>
                     <div class="market-price" id="gold-price">--</div>
@@ -280,7 +288,7 @@
                 
                 <div class="market-card">
                     <div class="market-header">
-                        <span class="market-name">🛢️ WTI原油</span>
+                        <span class="market-name">🛢️ 原油</span>
                         <span class="loading" id="oil-loading"></span>
                     </div>
                     <div class="market-price" id="oil-price">--</div>
@@ -291,41 +299,36 @@
     </main>
 
     <script>
-        // 儲存上一次價格
+        // Twelve Data API Key (免費版)
+        const API_KEY = 'demo'; // 用戶可以自己申請免費 key
+        
         const lastPrices = {};
         
-        // 更新時間顯示
         function updateTime() {
-            const now = new Date();
             document.getElementById('last-update').textContent = 
-                '最後更新: ' + now.toLocaleString('zh-HK');
+                '最後更新: ' + new Date().toLocaleString('zh-HK');
         }
         
-        // 更新價格（帶跳動效果）
         function updatePrice(id, newPrice, oldPrice) {
             const el = document.getElementById(id);
             if (!el) return;
             
             el.classList.remove('flash-up', 'flash-down');
             
-            // 格式化數字
             const formatted = newPrice >= 1000 
                 ? newPrice.toLocaleString('en-US', {minimumFractionDigits: 2})
                 : newPrice.toFixed(2);
             
             el.textContent = formatted;
             
-            // 比較舊價格加動畫
             if (oldPrice && newPrice !== oldPrice) {
                 el.classList.add(newPrice > oldPrice ? 'flash-up' : 'flash-down');
             }
             
-            // 隱藏 loading
             const loading = document.getElementById(id.replace('-price', '-loading'));
             if (loading) loading.style.display = 'none';
         }
         
-        // 更新變動
         function updateChange(id, percent) {
             const el = document.getElementById(id);
             if (!el) return;
@@ -338,29 +341,29 @@
             el.className = 'market-change ' + (isUp ? 'positive' : 'negative');
         }
         
-        // 用 JSONP 抓 Yahoo Finance 數據
-        function fetchYahoo(symbol, callback) {
-            const script = document.createElement('script');
-            const callbackName = 'yf_' + Date.now();
-            
-            window[callbackName] = function(data) {
-                callback(data);
-                delete window[callbackName];
-                document.head.removeChild(script);
-            };
-            
-            // Yahoo Finance JSONP endpoint
-            script.src = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=1d&range=1d&callback=${callbackName}`;
-            script.onerror = () => {
-                delete window[callbackName];
-                document.head.removeChild(script);
-                callback(null);
-            };
-            
-            document.head.appendChild(script);
+        // Twelve Data API (支援 CORS)
+        async function fetchTwelveData(symbol, elementId) {
+            try {
+                const url = `https://api.twelvedata.com/quote?symbol=${symbol}&apikey=${API_KEY}`;
+                const res = await fetch(url);
+                const data = await res.json();
+                
+                if (data.status === 'error') {
+                    console.error(`${symbol} error:`, data.message);
+                    return null;
+                }
+                
+                return {
+                    price: parseFloat(data.close || data.price),
+                    change: parseFloat(data.percent_change || 0)
+                };
+            } catch (e) {
+                console.error(`${symbol} fetch failed:`, e);
+                return null;
+            }
         }
         
-        // 抓 Crypto 數據（CoinGecko 支援 CORS）
+        // CoinGecko API (Crypto, 支援 CORS)
         async function fetchCrypto() {
             try {
                 const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd&include_24hr_change=true');
@@ -378,98 +381,46 @@
                     lastPrices.eth = data.ethereum.usd;
                 }
             } catch (e) {
-                console.error('Crypto fetch failed:', e);
+                console.error('Crypto error:', e);
             }
         }
         
         // 更新所有數據
-        function updateAll() {
-            // 港股 - 恆生
-            fetchYahoo('%5EHSI', (data) => {
-                if (data?.chart?.result?.[0]) {
-                    const meta = data.chart.result[0].meta;
-                    const price = meta.regularMarketPrice || meta.previousClose;
-                    const prev = meta.previousClose || price;
-                    const change = prev ? ((price - prev) / prev * 100) : 0;
-                    
-                    updatePrice('hsi-price', price, lastPrices.hsi);
-                    updateChange('hsi-change', change);
-                    lastPrices.hsi = price;
-                }
-            });
+        async function updateAll() {
+            // 股票指數 (用 Twelve Data)
+            const indices = [
+                { symbol: 'HSI', id: 'hsi', name: '恆生' },
+                { symbol: 'DJI', id: 'dow', name: '道指' },
+                { symbol: 'IXIC', id: 'nasdaq', name: '納指' },
+                { symbol: 'SPX', id: 'sp500', name: '標普' }
+            ];
             
-            // 道指
-            fetchYahoo('%5EDJI', (data) => {
-                if (data?.chart?.result?.[0]) {
-                    const meta = data.chart.result[0].meta;
-                    const price = meta.regularMarketPrice || meta.previousClose;
-                    const prev = meta.previousClose || price;
-                    const change = prev ? ((price - prev) / prev * 100) : 0;
-                    
-                    updatePrice('dow-price', price, lastPrices.dow);
-                    updateChange('dow-change', change);
-                    lastPrices.dow = price;
+            for (const idx of indices) {
+                const data = await fetchTwelveData(idx.symbol, idx.id);
+                if (data) {
+                    updatePrice(`${idx.id}-price`, data.price, lastPrices[idx.id]);
+                    updateChange(`${idx.id}-change`, data.change);
+                    lastPrices[idx.id] = data.price;
                 }
-            });
+            }
             
-            // 納指
-            fetchYahoo('%5EIXIC', (data) => {
-                if (data?.chart?.result?.[0]) {
-                    const meta = data.chart.result[0].meta;
-                    const price = meta.regularMarketPrice || meta.previousClose;
-                    const prev = meta.previousClose || price;
-                    const change = prev ? ((price - prev) / prev * 100) : 0;
-                    
-                    updatePrice('nasdaq-price', price, lastPrices.nasdaq);
-                    updateChange('nasdaq-change', change);
-                    lastPrices.nasdaq = price;
-                }
-            });
+            // 商品 (用 Twelve Data)
+            const commodities = [
+                { symbol: 'XAUUSD', id: 'gold', name: '黃金' },
+                { symbol: 'WTI', id: 'oil', name: '原油' }
+            ];
             
-            // 標普500
-            fetchYahoo('%5EGSPC', (data) => {
-                if (data?.chart?.result?.[0]) {
-                    const meta = data.chart.result[0].meta;
-                    const price = meta.regularMarketPrice || meta.previousClose;
-                    const prev = meta.previousClose || price;
-                    const change = prev ? ((price - prev) / prev * 100) : 0;
-                    
-                    updatePrice('sp500-price', price, lastPrices.sp500);
-                    updateChange('sp500-change', change);
-                    lastPrices.sp500 = price;
+            for (const comm of commodities) {
+                const data = await fetchTwelveData(comm.symbol, comm.id);
+                if (data) {
+                    updatePrice(`${comm.id}-price`, data.price, lastPrices[comm.id]);
+                    updateChange(`${comm.id}-change`, data.change);
+                    lastPrices[comm.id] = data.price;
                 }
-            });
-            
-            // 黃金
-            fetchYahoo('GC%3DF', (data) => {
-                if (data?.chart?.result?.[0]) {
-                    const meta = data.chart.result[0].meta;
-                    const price = meta.regularMarketPrice || 0;
-                    
-                    updatePrice('gold-price', price, lastPrices.gold);
-                    lastPrices.gold = price;
-                    
-                    const loading = document.getElementById('gold-loading');
-                    if (loading) loading.style.display = 'none';
-                }
-            });
-            
-            // 原油
-            fetchYahoo('CL%3DF', (data) => {
-                if (data?.chart?.result?.[0]) {
-                    const meta = data.chart.result[0].meta;
-                    const price = meta.regularMarketPrice || 0;
-                    
-                    updatePrice('oil-price', price, lastPrices.oil);
-                    lastPrices.oil = price;
-                    
-                    const loading = document.getElementById('oil-loading');
-                    if (loading) loading.style.display = 'none';
-                }
-            });
+            }
             
             // Crypto
-            fetchCrypto();
+            await fetchCrypto();
             
             updateTime();
         }
@@ -477,8 +428,8 @@
         // 初始化
         document.addEventListener('DOMContentLoaded', () => {
             updateAll();
-            setInterval(updateAll, 30000); // 每 30 秒更新
-            console.log('🚀 實時數據已啟動');
+            setInterval(updateAll, 60000); // 每分鐘更新（免費 API limit）
+            console.log('🚀 實時數據已啟動 (Twelve Data)');
         });
     </script>
 </body>
