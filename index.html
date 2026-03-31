@@ -469,7 +469,7 @@
             <div class="meta-info">
                 <span class="meta-item">📅 March 31, 2026</span>
                 <span class="badge">每週一 9:00 AM 更新</span>
-                <span class="meta-item">🕐 HKT 13:50</span>
+                <span class="meta-item">🕐 數據截止: 2026-03-31 16:49 HKT</span>
             </div>
         </div>
     </header>
@@ -863,6 +863,49 @@
             </p>
         </div>
     </main>
+
+    <!-- Screenshot Button -->
+    <button onclick="generateImage()" style="position: fixed; bottom: 30px; right: 30px; background: linear-gradient(135deg, var(--gold) 0%, #B8960C 100%); color: #0a0e1a; border: none; padding: 14px 24px; border-radius: 50px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 15px rgba(212,175,55,0.4); z-index: 1000; display: flex; align-items: center; gap: 8px; font-size: 0.95rem;">
+        📸 下載圖片
+    </button>
+
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <script>
+        function generateImage() {
+            const btn = document.querySelector('button[onclick="generateImage()"]');
+            btn.textContent = '⏳ 生成中...';
+            btn.disabled = true;
+            
+            // Hide button before capture
+            btn.style.display = 'none';
+            
+            html2canvas(document.body, {
+                width: 1200,
+                windowWidth: 1200,
+                scale: 2,
+                useCORS: true,
+                allowTaint: true,
+                backgroundColor: '#0a0e1a'
+            }).then(canvas => {
+                // Show button again
+                btn.style.display = 'flex';
+                btn.textContent = '📸 下載圖片';
+                btn.disabled = false;
+                
+                // Download
+                const link = document.createElement('a');
+                link.download = '環球財經簡報_2026-03-31.png';
+                link.href = canvas.toDataURL('image/png', 1.0);
+                link.click();
+            }).catch(err => {
+                console.error('Error:', err);
+                btn.style.display = 'flex';
+                btn.textContent = '📸 下載圖片';
+                btn.disabled = false;
+                alert('生成圖片時出錯，請重試');
+            });
+        }
+    </script>
 
     <!-- Footer -->
     <footer class="footer">
