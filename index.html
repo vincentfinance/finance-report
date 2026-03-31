@@ -16,41 +16,20 @@
             --text-secondary: #94a3b8;
             --positive: #22c55e;
             --negative: #ef4444;
-            --accent: #3b82f6;
         }
         
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
-            font-family: 'Inter', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Inter', 'Noto Sans SC', sans-serif;
             background: var(--dark-bg);
             color: var(--text-primary);
             line-height: 1.6;
-            min-height: 100vh;
-        }
-        
-        /* 實時跳動動畫 */
-        @keyframes priceUp {
-            0% { color: var(--positive); transform: scale(1.1); }
-            100% { color: var(--text-primary); transform: scale(1); }
-        }
-        
-        @keyframes priceDown {
-            0% { color: var(--negative); transform: scale(1.1); }
-            100% { color: var(--text-primary); transform: scale(1); }
-        }
-        
-        .price-up {
-            animation: priceUp 0.5s ease-out;
-        }
-        
-        .price-down {
-            animation: priceDown 0.5s ease-out;
         }
         
         @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.5; transform: scale(1.2); }
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
         }
         
         .live-dot {
@@ -59,31 +38,28 @@
             height: 8px;
             background: var(--positive);
             border-radius: 50%;
-            animation: pulse 1.5s infinite;
+            animation: pulse 1s infinite;
             margin-right: 6px;
         }
         
-        .live-indicator {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            color: var(--positive);
-            font-size: 0.85rem;
-            font-weight: 600;
-            background: rgba(34, 197, 94, 0.1);
-            padding: 4px 12px;
-            border-radius: 20px;
-            border: 1px solid rgba(34, 197, 94, 0.3);
+        @keyframes flashGreen {
+            0% { color: var(--positive); text-shadow: 0 0 10px var(--positive); }
+            100% { color: var(--text-primary); }
         }
         
-        /* Header */
+        @keyframes flashRed {
+            0% { color: var(--negative); text-shadow: 0 0 10px var(--negative); }
+            100% { color: var(--text-primary); }
+        }
+        
+        .flash-up { animation: flashGreen 0.8s ease-out; }
+        .flash-down { animation: flashRed 0.8s ease-out; }
+        
         .header {
             background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
             border-bottom: 2px solid var(--gold);
             padding: 40px 20px;
             text-align: center;
-            position: relative;
-            overflow: hidden;
         }
         
         .logo {
@@ -92,64 +68,23 @@
             background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 50%, var(--gold) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            background-clip: text;
             margin-bottom: 10px;
-            letter-spacing: -0.02em;
         }
         
-        .subtitle {
-            font-size: 1.1rem;
-            color: var(--text-secondary);
-            font-weight: 300;
-            margin-bottom: 20px;
-        }
+        .subtitle { font-size: 1.1rem; color: var(--text-secondary); margin-bottom: 20px; }
         
-        .update {
-            font-size: 0.95rem;
-            color: var(--text-secondary);
-        }
-        
-        /* Navigation */
-        .nav {
-            background: rgba(15, 23, 42, 0.95);
-            backdrop-filter: blur(10px);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            border-bottom: 1px solid var(--border);
-        }
-        
-        .nav-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-            display: flex;
-            justify-content: space-between;
+        .live-badge {
+            display: inline-flex;
             align-items: center;
-            height: 60px;
+            gap: 6px;
+            color: var(--positive);
+            font-weight: 600;
+            background: rgba(34, 197, 94, 0.1);
+            padding: 6px 16px;
+            border-radius: 20px;
+            border: 1px solid rgba(34, 197, 94, 0.3);
         }
         
-        .nav-links {
-            display: flex;
-            gap: 8px;
-        }
-        
-        .nav-links a {
-            color: var(--text-secondary);
-            text-decoration: none;
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-size: 0.9rem;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-        
-        .nav-links a:hover {
-            color: var(--gold);
-            background: rgba(212, 175, 55, 0.1);
-        }
-        
-        /* Main Content */
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -162,7 +97,6 @@
             border-radius: 16px;
             padding: 32px;
             margin-bottom: 24px;
-            backdrop-filter: blur(10px);
         }
         
         .section-header {
@@ -170,23 +104,18 @@
             align-items: center;
             gap: 12px;
             margin-bottom: 24px;
-            padding-bottom: 16px;
-            border-bottom: 2px solid var(--border);
         }
         
         .section-title {
             font-size: 1.4rem;
             font-weight: 600;
             color: var(--gold);
-            letter-spacing: -0.01em;
         }
         
-        /* Market Cards */
         .market-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
             gap: 20px;
-            margin-bottom: 24px;
         }
         
         .market-card {
@@ -202,79 +131,32 @@
             transform: translateY(-2px);
         }
         
-        .market-card-header {
+        .market-header {
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 16px;
+            align-items: center;
+            margin-bottom: 12px;
         }
         
-        .market-name {
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
+        .market-name { font-weight: 600; }
         
-        .market-flag {
-            font-size: 1.4rem;
-        }
-        
-        .market-value {
+        .market-price {
             font-size: 2rem;
             font-weight: 700;
-            color: var(--text-primary);
             margin-bottom: 8px;
             transition: all 0.3s ease;
         }
         
         .market-change {
-            font-size: 0.95rem;
             font-weight: 600;
             display: flex;
             align-items: center;
             gap: 6px;
         }
         
-        .market-time {
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            margin-top: 8px;
-        }
-        
         .positive { color: var(--positive); }
         .negative { color: var(--negative); }
         
-        .highlight {
-            color: var(--gold);
-            font-weight: 600;
-        }
-        
-        /* Tables */
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.95rem;
-        }
-        
-        .data-table th {
-            background: rgba(212, 175, 55, 0.15);
-            color: var(--gold);
-            font-weight: 600;
-            text-align: left;
-            padding: 14px 16px;
-            border-bottom: 2px solid var(--gold);
-        }
-        
-        .data-table td {
-            padding: 14px 16px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        
-        .data-table tr:hover {
-            background: rgba(255, 255, 255, 0.02);
-        }
-        
-        /* Loading */
         .loading {
             display: inline-block;
             width: 16px;
@@ -285,116 +167,75 @@
             animation: spin 1s linear infinite;
         }
         
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
+        @keyframes spin { to { transform: rotate(360deg); } }
         
-        /* Disclaimer */
-        .disclaimer {
-            background: rgba(239, 68, 68, 0.08);
-            border-left: 4px solid var(--negative);
-            padding: 20px 24px;
-            margin: 32px 0;
-            border-radius: 0 8px 8px 0;
-        }
-        
-        .disclaimer-text {
-            font-size: 0.85rem;
-            color: #fca5a5;
-            line-height: 1.6;
-        }
-        
-        /* Footer */
-        .footer {
+        .last-update {
             text-align: center;
-            padding: 40px 20px;
-            border-top: 1px solid var(--border);
             color: var(--text-secondary);
-            font-size: 0.85rem;
+            margin-top: 20px;
+            font-size: 0.9rem;
         }
     </style>
 </head>
 <body>
     <header class="header">
         <h1 class="logo">📊 環球財經簡報</h1>
-        <p class="subtitle">Global Finance Brief · 實時更新</p>
-        <p class="update">
-            📅 <span id="current-date"></span> | 
-            <span class="live-indicator">
-                <span class="live-dot"></span>
-                🔴 LIVE 實時數據
-            </span> | 
-            <span id="last-update">載入中...</span>
-        </p>
+        <p class="subtitle">Global Finance Brief · 實時跳動</p>
+        <span class="live-badge">
+            <span class="live-dot"></span>
+            🔴 LIVE 實時數據 · 每 30 秒更新
+        </span>
     </header>
 
-    <nav class="nav">
-        <div class="nav-content">
-            <div class="nav-links">
-                <a href="#macro">環球宏觀</a>
-                <a href="#hk">港股</a>
-                <a href="#us">美股</a>
-                <a href="#crypto">加密貨幣</a>
-                <a href="#commodities">大宗商品</a>
-            </div>
-            <span class="live-indicator">
-                <span class="live-dot"></span>
-                自動刷新
-            </span>
-        </div>
-    </nav>
-
     <main class="container">
-        <section class="section" id="macro">
+        <section class="section">
             <div class="section-header">
                 <span style="font-size: 1.8rem;">🌍</span>
-                <h2 class="section-title">環球宏觀 - 實時指數</h2>
+                <h2 class="section-title">環球指數 - 實時跳動</h2>
             </div>
             
             <div class="market-grid">
                 <div class="market-card">
-                    <div class="market-card-header">
+                    <div class="market-header">
                         <span class="market-name">🇭🇰 恆生指數</span>
                         <span class="loading" id="hsi-loading"></span>
                     </div>
-                    <div class="market-value" id="hsi-price">--</div>
+                    <div class="market-price" id="hsi-price">--</div>
                     <div class="market-change" id="hsi-change">--</div>
-                    <div class="market-time" id="hsi-time">更新中...</div>
                 </div>
                 
                 <div class="market-card">
-                    <div class="market-card-header">
+                    <div class="market-header">
                         <span class="market-name">🇺🇸 道瓊斯</span>
                         <span class="loading" id="dow-loading"></span>
                     </div>
-                    <div class="market-value" id="dow-price">--</div>
+                    <div class="market-price" id="dow-price">--</div>
                     <div class="market-change" id="dow-change">--</div>
-                    <div class="market-time" id="dow-time">更新中...</div>
                 </div>
                 
                 <div class="market-card">
-                    <div class="market-card-header">
+                    <div class="market-header">
                         <span class="market-name">🇺🇸 納斯達克</span>
                         <span class="loading" id="nasdaq-loading"></span>
                     </div>
-                    <div class="market-value" id="nasdaq-price">--</div>
+                    <div class="market-price" id="nasdaq-price">--</div>
                     <div class="market-change" id="nasdaq-change">--</div>
-                    <div class="market-time" id="nasdaq-time">更新中...</div>
                 </div>
                 
                 <div class="market-card">
-                    <div class="market-card-header">
+                    <div class="market-header">
                         <span class="market-name">🇺🇸 標普500</span>
                         <span class="loading" id="sp500-loading"></span>
                     </div>
-                    <div class="market-value" id="sp500-price">--</div>
+                    <div class="market-price" id="sp500-price">--</div>
                     <div class="market-change" id="sp500-change">--</div>
-                    <div class="market-time" id="sp500-time">更新中...</div>
                 </div>
             </div>
+            
+            <p class="last-update" id="last-update">更新中...</p>
         </section>
 
-        <section class="section" id="crypto">
+        <section class="section">
             <div class="section-header">
                 <span style="font-size: 1.8rem;">₿</span>
                 <h2 class="section-title">加密貨幣 - 實時</h2>
@@ -402,18 +243,26 @@
             
             <div class="market-grid">
                 <div class="market-card">
-                    <div class="market-card-header">
+                    <div class="market-header">
                         <span class="market-name">Bitcoin (BTC)</span>
                         <span class="loading" id="btc-loading"></span>
                     </div>
-                    <div class="market-value" id="btc-price">--</div>
+                    <div class="market-price" id="btc-price">--</div>
                     <div class="market-change" id="btc-change">--</div>
-                    <div class="market-time" id="btc-time">更新中...</div>
+                </div>
+                
+                <div class="market-card">
+                    <div class="market-header">
+                        <span class="market-name">Ethereum (ETH)</span>
+                        <span class="loading" id="eth-loading"></span>
+                    </div>
+                    <div class="market-price" id="eth-price">--</div>
+                    <div class="market-change" id="eth-change">--</div>
                 </div>
             </div>
         </section>
 
-        <section class="section" id="commodities">
+        <section class="section">
             <div class="section-header">
                 <span style="font-size: 1.8rem;">🛢️</span>
                 <h2 class="section-title">大宗商品 - 實時</h2>
@@ -421,260 +270,215 @@
             
             <div class="market-grid">
                 <div class="market-card">
-                    <div class="market-card-header">
+                    <div class="market-header">
                         <span class="market-name">🥇 現貨黃金</span>
                         <span class="loading" id="gold-loading"></span>
                     </div>
-                    <div class="market-value" id="gold-price">--</div>
-                    <div class="market-time" id="gold-time">更新中...</div>
+                    <div class="market-price" id="gold-price">--</div>
+                    <div class="market-change" id="gold-change">--</div>
                 </div>
                 
                 <div class="market-card">
-                    <div class="market-card-header">
+                    <div class="market-header">
                         <span class="market-name">🛢️ WTI原油</span>
                         <span class="loading" id="oil-loading"></span>
                     </div>
-                    <div class="market-value" id="oil-price">--</div>
-                    <div class="market-time" id="oil-time">更新中...</div>
+                    <div class="market-price" id="oil-price">--</div>
+                    <div class="market-change" id="oil-change">--</div>
                 </div>
             </div>
         </section>
-
-        <div class="disclaimer">
-            <p class="disclaimer-text">
-                <strong>免責聲明：</strong>本報告數據來自公開 API（Yahoo Finance、CoinGecko），實時更新可能有延遲。僅供參考，不構成投資建議。
-            </p>
-        </div>
     </main>
 
-    <footer class="footer">
-        <p>📊 環球財經簡報 | 實時更新 | 每週一 9:15 AM 整合上週新聞</p>
-        <p>© 2026 Kimi Claw Intelligence</p>
-    </footer>
-
     <script>
-        // 實時數據配置
-        const REFRESH_INTERVAL = 30000; // 每30秒更新
-        
-        // 數據源
-        const DATA_SOURCES = {
-            yahoo: 'https://query1.finance.yahoo.com/v8/finance/chart/',
-            crypto: 'https://api.coingecko.com/api/v3/simple/price'
-        };
-        
-        // 儲存上一次價格用嚟比較
+        // 儲存上一次價格
         const lastPrices = {};
         
-        // 更新日期顯示
-        function updateDate() {
-            const now = new Date();
-            document.getElementById('current-date').textContent = now.toLocaleDateString('zh-HK', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-                weekday: 'long'
-            });
-        }
-        
         // 更新時間顯示
-        function updateLastUpdateTime() {
+        function updateTime() {
             const now = new Date();
             document.getElementById('last-update').textContent = 
-                '最後更新: ' + now.toLocaleTimeString('zh-HK');
+                '最後更新: ' + now.toLocaleString('zh-HK');
         }
         
-        // 更新價格顯示（帶跳動效果）
-        function updatePriceWithAnimation(elementId, newPrice, oldPrice) {
-            const el = document.getElementById(elementId);
+        // 更新價格（帶跳動效果）
+        function updatePrice(id, newPrice, oldPrice) {
+            const el = document.getElementById(id);
             if (!el) return;
             
-            // 移除舊動畫 class
-            el.classList.remove('price-up', 'price-down');
+            el.classList.remove('flash-up', 'flash-down');
             
-            // 格式化價格
-            let formattedPrice;
-            if (newPrice >= 1000) {
-                formattedPrice = newPrice.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-            } else if (newPrice >= 1) {
-                formattedPrice = newPrice.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-            } else {
-                formattedPrice = newPrice.toFixed(4);
-            }
+            // 格式化數字
+            const formatted = newPrice >= 1000 
+                ? newPrice.toLocaleString('en-US', {minimumFractionDigits: 2})
+                : newPrice.toFixed(2);
             
-            el.textContent = formattedPrice;
+            el.textContent = formatted;
             
-            // 如果有舊價格，比較並添加動畫
+            // 比較舊價格加動畫
             if (oldPrice && newPrice !== oldPrice) {
-                if (newPrice > oldPrice) {
-                    el.classList.add('price-up');
-                } else if (newPrice < oldPrice) {
-                    el.classList.add('price-down');
-                }
-                
-                // 移除 loading 動畫
-                const loadingId = elementId.replace('-price', '-loading');
-                const loadingEl = document.getElementById(loadingId);
-                if (loadingEl) loadingEl.style.display = 'none';
+                el.classList.add(newPrice > oldPrice ? 'flash-up' : 'flash-down');
             }
             
-            // 更新時間
-            const timeId = elementId.replace('-price', '-time');
-            const timeEl = document.getElementById(timeId);
-            if (timeEl) {
-                timeEl.textContent = '⏱️ 實時 | ' + new Date().toLocaleTimeString('zh-HK');
-            }
+            // 隱藏 loading
+            const loading = document.getElementById(id.replace('-price', '-loading'));
+            if (loading) loading.style.display = 'none';
         }
         
-        // 更新變動顯示
-        function updateChange(elementId, changePercent) {
-            const el = document.getElementById(elementId);
+        // 更新變動
+        function updateChange(id, percent) {
+            const el = document.getElementById(id);
             if (!el) return;
             
-            const isPositive = changePercent >= 0;
-            const arrow = isPositive ? '▲' : '▼';
-            const sign = isPositive ? '+' : '';
+            const isUp = percent >= 0;
+            const arrow = isUp ? '▲' : '▼';
+            const sign = isUp ? '+' : '';
             
-            el.innerHTML = `${arrow} ${sign}${changePercent.toFixed(2)}%`;
-            el.className = 'market-change ' + (isPositive ? 'positive' : 'negative');
+            el.innerHTML = `${arrow} ${sign}${percent.toFixed(2)}%`;
+            el.className = 'market-change ' + (isUp ? 'positive' : 'negative');
         }
         
-        // 從 Yahoo Finance 獲取數據
-        async function fetchYahooData(symbol, name) {
-            try {
-                const url = `${DATA_SOURCES.yahoo}${symbol}?interval=1m&range=1d`;
-                const response = await fetch(url);
-                const data = await response.json();
-                
-                if (data.chart && data.chart.result && data.chart.result[0]) {
-                    const meta = data.chart.result[0].meta;
-                    const price = meta.regularMarketPrice || meta.previousClose || 0;
-                    const prev = meta.previousClose || price;
-                    const change = prev ? ((price - prev) / prev * 100) : 0;
-                    
-                    return { price, change, prev };
-                }
-            } catch (e) {
-                console.error(`獲取 ${name} 失敗:`, e);
-            }
-            return null;
+        // 用 JSONP 抓 Yahoo Finance 數據
+        function fetchYahoo(symbol, callback) {
+            const script = document.createElement('script');
+            const callbackName = 'yf_' + Date.now();
+            
+            window[callbackName] = function(data) {
+                callback(data);
+                delete window[callbackName];
+                document.head.removeChild(script);
+            };
+            
+            // Yahoo Finance JSONP endpoint
+            script.src = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=1d&range=1d&callback=${callbackName}`;
+            script.onerror = () => {
+                delete window[callbackName];
+                document.head.removeChild(script);
+                callback(null);
+            };
+            
+            document.head.appendChild(script);
         }
         
-        // 從 CoinGecko 獲取 Crypto 數據
-        async function fetchCryptoData() {
+        // 抓 Crypto 數據（CoinGecko 支援 CORS）
+        async function fetchCrypto() {
             try {
-                const url = `${DATA_SOURCES.crypto}?ids=bitcoin&vs_currencies=usd&include_24hr_change=true`;
-                const response = await fetch(url);
-                const data = await response.json();
+                const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd&include_24hr_change=true');
+                const data = await res.json();
                 
                 if (data.bitcoin) {
-                    return {
-                        price: data.bitcoin.usd,
-                        change: data.bitcoin.usd_24h_change || 0
-                    };
+                    updatePrice('btc-price', data.bitcoin.usd, lastPrices.btc);
+                    updateChange('btc-change', data.bitcoin.usd_24h_change || 0);
+                    lastPrices.btc = data.bitcoin.usd;
                 }
-            } catch (e) {
-                console.error('獲取 BTC 失敗:', e);
-            }
-            return null;
-        }
-        
-        // 獲取商品數據
-        async function fetchCommodityData(symbol) {
-            try {
-                const url = `${DATA_SOURCES.yahoo}${symbol}?interval=1d&range=1d`;
-                const response = await fetch(url);
-                const data = await response.json();
                 
-                if (data.chart && data.chart.result && data.chart.result[0]) {
-                    const meta = data.chart.result[0].meta;
-                    return { price: meta.regularMarketPrice || 0 };
+                if (data.ethereum) {
+                    updatePrice('eth-price', data.ethereum.usd, lastPrices.eth);
+                    updateChange('eth-change', data.ethereum.usd_24h_change || 0);
+                    lastPrices.eth = data.ethereum.usd;
                 }
             } catch (e) {
-                console.error(`獲取 ${symbol} 失敗:`, e);
+                console.error('Crypto fetch failed:', e);
             }
-            return null;
         }
         
         // 更新所有數據
-        async function updateAllData() {
-            console.log('🔄 更新實時數據...', new Date().toLocaleTimeString('zh-HK'));
+        function updateAll() {
+            // 港股 - 恆生
+            fetchYahoo('%5EHSI', (data) => {
+                if (data?.chart?.result?.[0]) {
+                    const meta = data.chart.result[0].meta;
+                    const price = meta.regularMarketPrice || meta.previousClose;
+                    const prev = meta.previousClose || price;
+                    const change = prev ? ((price - prev) / prev * 100) : 0;
+                    
+                    updatePrice('hsi-price', price, lastPrices.hsi);
+                    updateChange('hsi-change', change);
+                    lastPrices.hsi = price;
+                }
+            });
             
-            // 港股 - 恆生指數
-            const hsi = await fetchYahooData('%5EHSI', 'HSI');
-            if (hsi) {
-                updatePriceWithAnimation('hsi-price', hsi.price, lastPrices.hsi);
-                updateChange('hsi-change', hsi.change);
-                lastPrices.hsi = hsi.price;
-            }
-            
-            // 美股 - 道指
-            const dow = await fetchYahooData('%5EDJI', 'DJI');
-            if (dow) {
-                updatePriceWithAnimation('dow-price', dow.price, lastPrices.dow);
-                updateChange('dow-change', dow.change);
-                lastPrices.dow = dow.price;
-            }
+            // 道指
+            fetchYahoo('%5EDJI', (data) => {
+                if (data?.chart?.result?.[0]) {
+                    const meta = data.chart.result[0].meta;
+                    const price = meta.regularMarketPrice || meta.previousClose;
+                    const prev = meta.previousClose || price;
+                    const change = prev ? ((price - prev) / prev * 100) : 0;
+                    
+                    updatePrice('dow-price', price, lastPrices.dow);
+                    updateChange('dow-change', change);
+                    lastPrices.dow = price;
+                }
+            });
             
             // 納指
-            const nasdaq = await fetchYahooData('%5EIXIC', 'NASDAQ');
-            if (nasdaq) {
-                updatePriceWithAnimation('nasdaq-price', nasdaq.price, lastPrices.nasdaq);
-                updateChange('nasdaq-change', nasdaq.change);
-                lastPrices.nasdaq = nasdaq.price;
-            }
+            fetchYahoo('%5EIXIC', (data) => {
+                if (data?.chart?.result?.[0]) {
+                    const meta = data.chart.result[0].meta;
+                    const price = meta.regularMarketPrice || meta.previousClose;
+                    const prev = meta.previousClose || price;
+                    const change = prev ? ((price - prev) / prev * 100) : 0;
+                    
+                    updatePrice('nasdaq-price', price, lastPrices.nasdaq);
+                    updateChange('nasdaq-change', change);
+                    lastPrices.nasdaq = price;
+                }
+            });
             
             // 標普500
-            const sp500 = await fetchYahooData('%5EGSPC', 'SP500');
-            if (sp500) {
-                updatePriceWithAnimation('sp500-price', sp500.price, lastPrices.sp500);
-                updateChange('sp500-change', sp500.change);
-                lastPrices.sp500 = sp500.price;
-            }
-            
-            // Bitcoin
-            const btc = await fetchCryptoData();
-            if (btc) {
-                updatePriceWithAnimation('btc-price', btc.price, lastPrices.btc);
-                updateChange('btc-change', btc.change);
-                lastPrices.btc = btc.price;
-            }
+            fetchYahoo('%5EGSPC', (data) => {
+                if (data?.chart?.result?.[0]) {
+                    const meta = data.chart.result[0].meta;
+                    const price = meta.regularMarketPrice || meta.previousClose;
+                    const prev = meta.previousClose || price;
+                    const change = prev ? ((price - prev) / prev * 100) : 0;
+                    
+                    updatePrice('sp500-price', price, lastPrices.sp500);
+                    updateChange('sp500-change', change);
+                    lastPrices.sp500 = price;
+                }
+            });
             
             // 黃金
-            const gold = await fetchCommodityData('GC%3DF');
-            if (gold) {
-                updatePriceWithAnimation('gold-price', gold.price, lastPrices.gold);
-                lastPrices.gold = gold.price;
-            }
+            fetchYahoo('GC%3DF', (data) => {
+                if (data?.chart?.result?.[0]) {
+                    const meta = data.chart.result[0].meta;
+                    const price = meta.regularMarketPrice || 0;
+                    
+                    updatePrice('gold-price', price, lastPrices.gold);
+                    lastPrices.gold = price;
+                    
+                    const loading = document.getElementById('gold-loading');
+                    if (loading) loading.style.display = 'none';
+                }
+            });
             
             // 原油
-            const oil = await fetchCommodityData('CL%3DF');
-            if (oil) {
-                updatePriceWithAnimation('oil-price', oil.price, lastPrices.oil);
-                lastPrices.oil = oil.price;
-            }
+            fetchYahoo('CL%3DF', (data) => {
+                if (data?.chart?.result?.[0]) {
+                    const meta = data.chart.result[0].meta;
+                    const price = meta.regularMarketPrice || 0;
+                    
+                    updatePrice('oil-price', price, lastPrices.oil);
+                    lastPrices.oil = price;
+                    
+                    const loading = document.getElementById('oil-loading');
+                    if (loading) loading.style.display = 'none';
+                }
+            });
             
-            updateLastUpdateTime();
-            console.log('✅ 數據更新完成');
+            // Crypto
+            fetchCrypto();
+            
+            updateTime();
         }
         
         // 初始化
         document.addEventListener('DOMContentLoaded', () => {
-            updateDate();
-            
-            // 立即更新一次
-            updateAllData();
-            
-            // 每30秒自動更新
-            setInterval(updateAllData, REFRESH_INTERVAL);
-            
-            console.log('🚀 實時數據系統已啟動');
-        });
-        
-        // 頁面重新可見時立即更新
-        document.addEventListener('visibilitychange', () => {
-            if (document.visibilityState === 'visible') {
-                updateAllData();
-            }
+            updateAll();
+            setInterval(updateAll, 30000); // 每 30 秒更新
+            console.log('🚀 實時數據已啟動');
         });
     </script>
 </body>
