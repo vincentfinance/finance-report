@@ -3,160 +3,872 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>每日環球財經簡報</title>
+    <title>環球財經簡報 | Global Finance Brief</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
-        *{margin:0;padding:0;box-sizing:border-box}
-        body{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;background:linear-gradient(135deg,#0f2027 0%,#203a43 50%,#2c5364 100%);color:#fff;max-width:1200px;margin:0 auto;padding:20px;line-height:1.6}
-        h1{color:#ffd700;text-align:center;font-size:2.5rem;margin-bottom:10px}
-        .date{text-align:center;color:#a0aec0;margin-bottom:10px;font-size:1.1rem}
-        .update{text-align:center;color:#718096;font-size:0.9rem;margin-bottom:30px}
-        h2{color:#ffd700;border-bottom:2px solid rgba(255,215,0,0.3);padding-bottom:10px;margin-top:30px;font-size:1.4rem}
-        .section{background:rgba(255,255,255,0.05);padding:25px;border-radius:15px;margin-bottom:20px;border:1px solid rgba(255,255,255,0.1)}
-        table{width:100%;border-collapse:collapse;margin:15px 0;background:rgba(0,0,0,0.2);border-radius:10px;overflow:hidden}
-        th,td{padding:12px;text-align:left;border-bottom:1px solid rgba(255,255,255,0.1)}
-        th{background:rgba(74,144,217,0.3);color:#ffd700;font-weight:600}
-        tr:hover{background:rgba(255,255,255,0.05)}
-        .highlight{color:#ffd700;font-weight:bold}
-        .positive{color:#48bb78;font-weight:bold}
-        .negative{color:#f56565;font-weight:bold}
-        ul{list-style:none;padding-left:0}
-        li{padding:8px 0;padding-left:20px;position:relative}
-        li:before{content:"▸";position:absolute;left:0;color:#ffd700}
-        .grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
-        .card{background:rgba(0,0,0,0.2);padding:20px;border-radius:10px;border:1px solid rgba(255,255,255,0.1)}
-        .card h3{color:#4a90d9;margin-bottom:10px;font-size:1.1rem}
-        .price-tag{font-size:1.8rem;font-weight:bold;color:#ffd700}
-        .footer{text-align:center;margin-top:40px;padding:20px;color:#718096;font-size:0.85rem;border-top:1px solid rgba(255,255,255,0.1)}
-        .nav{position:sticky;top:0;background:rgba(15,32,39,0.95);padding:12px 0;margin-bottom:20px;border-bottom:1px solid rgba(255,255,255,0.1);z-index:100}
-        .nav-links{display:flex;justify-content:center;gap:20px;flex-wrap:wrap}
-        .nav-links a{color:#a0aec0;text-decoration:none;padding:6px 12px;border-radius:15px;font-size:0.9rem}
-        .nav-links a:hover{background:rgba(255,215,0,0.1);color:#ffd700}
-        .disclaimer{background:rgba(255,0,0,0.08);border-left:3px solid #f56565;padding:15px;margin:20px 0;font-size:0.85rem;color:#fc8181}
+        :root {
+            --gold: #D4AF37;
+            --gold-light: #F4E8C1;
+            --dark-bg: #0a0e1a;
+            --card-bg: rgba(20, 25, 40, 0.8);
+            --border: rgba(212, 175, 55, 0.2);
+            --text-primary: #ffffff;
+            --text-secondary: #94a3b8;
+            --positive: #22c55e;
+            --negative: #ef4444;
+            --accent: #3b82f6;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--dark-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            border-bottom: 2px solid var(--gold);
+            padding: 40px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(ellipse at center, rgba(212,175,55,0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        
+        .header-content { position: relative; z-index: 1; max-width: 1200px; margin: 0 auto; }
+        
+        .logo {
+            font-size: 2.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 50%, var(--gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            letter-spacing: -0.02em;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            font-weight: 300;
+            margin-bottom: 20px;
+        }
+        
+        .meta-info {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .badge {
+            background: rgba(212, 175, 55, 0.15);
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        
+        /* Navigation */
+        .nav {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 60px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: var(--gold);
+            background: rgba(212, 175, 55, 0.1);
+        }
+        
+        .whatsapp-btn {
+            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+            color: white !important;
+            padding: 8px 16px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: transform 0.2s;
+        }
+        
+        .whatsapp-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(37, 211, 102, 0.4);
+        }
+        
+        /* Main Content */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .section {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 24px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid var(--border);
+        }
+        
+        .section-icon {
+            font-size: 1.8rem;
+        }
+        
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--gold);
+            letter-spacing: -0.01em;
+        }
+        
+        .section-subtitle {
+            margin-left: auto;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+        
+        /* Market Overview Cards */
+        .market-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+        
+        .market-card {
+            background: linear-gradient(145deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            transition: all 0.3s ease;
+        }
+        
+        .market-card:hover {
+            border-color: rgba(212, 175, 55, 0.4);
+            transform: translateY(-2px);
+        }
+        
+        .market-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+        
+        .market-name {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .market-flag {
+            font-size: 1.4rem;
+        }
+        
+        .market-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+        
+        .market-change {
+            font-size: 0.95rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .positive { color: var(--positive); }
+        .negative { color: var(--negative); }
+        
+        /* Tables */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+        
+        .data-table th {
+            background: rgba(212, 175, 55, 0.15);
+            color: var(--gold);
+            font-weight: 600;
+            text-align: left;
+            padding: 14px 16px;
+            border-bottom: 2px solid var(--gold);
+        }
+        
+        .data-table td {
+            padding: 14px 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .data-table tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+        
+        .highlight {
+            color: var(--gold);
+            font-weight: 600;
+        }
+        
+        /* Investment Strategy Section */
+        .strategy-box {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(147, 197, 253, 0.05) 100%);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 12px;
+            padding: 24px;
+            margin-top: 20px;
+        }
+        
+        .strategy-title {
+            color: #60a5fa;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .strategy-list {
+            list-style: none;
+        }
+        
+        .strategy-list li {
+            padding: 10px 0;
+            padding-left: 28px;
+            position: relative;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .strategy-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .strategy-list li::before {
+            content: '▹';
+            position: absolute;
+            left: 0;
+            color: #60a5fa;
+            font-size: 1.2rem;
+        }
+        
+        /* Sources Section */
+        .sources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 16px;
+        }
+        
+        .source-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.2s;
+        }
+        
+        .source-item:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: var(--border);
+        }
+        
+        .source-number {
+            background: var(--gold);
+            color: var(--dark-bg);
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+        
+        .source-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            flex: 1;
+        }
+        
+        .source-link:hover {
+            color: var(--gold);
+        }
+        
+        .external-icon {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+        }
+        
+        /* Contact Section */
+        .contact-section {
+            background: linear-gradient(135deg, rgba(37, 211, 102, 0.1) 0%, rgba(18, 140, 126, 0.05) 100%);
+            border: 1px solid rgba(37, 211, 102, 0.3);
+            border-radius: 16px;
+            padding: 32px;
+            text-align: center;
+            margin-top: 32px;
+        }
+        
+        .contact-title {
+            font-size: 1.3rem;
+            color: #25D366;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+        
+        .contact-desc {
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+        }
+        
+        .whatsapp-large {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+            color: white;
+            text-decoration: none;
+            padding: 14px 28px;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+        }
+        
+        .whatsapp-large:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4);
+        }
+        
+        /* Disclaimer */
+        .disclaimer {
+            background: rgba(239, 68, 68, 0.08);
+            border-left: 4px solid var(--negative);
+            padding: 20px 24px;
+            margin: 32px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .disclaimer-text {
+            font-size: 0.85rem;
+            color: #fca5a5;
+            line-height: 1.6;
+        }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            border-top: 1px solid var(--border);
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+        
+        .footer-brand {
+            color: var(--gold);
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .logo { font-size: 2rem; }
+            .nav-links { display: none; }
+            .section { padding: 24px; }
+            .market-grid { grid-template-columns: 1fr; }
+            .meta-info { flex-direction: column; gap: 10px; }
+        }
     </style>
 </head>
 <body>
-    <div class="nav">
-        <div class="nav-links">
-            <a href="#macro">環球宏觀</a>
-            <a href="#hk">港股</a>
-            <a href="#us">美股</a>
-            <a href="#crypto">加密貨幣</a>
-            <a href="#commodities">大宗商品</a>
-        </div>
-    </div>
-
-    <h1>📊 每日環球財經簡報</h1>
-    <p class="date">Daily Global Finance Brief</p>
-    <p class="update">📅 March 31, 2026 | 最後更新: 2026-03-31 13:50 HKT | 每週一 9:00 AM 更新</p>
-
-    <div class="section" id="macro">
-        <h2>🌍 環球宏觀經濟 | Global Macro</h2>
-        <ul>
-            <li>美聯儲利率：維持 <span class="highlight">4.25%-4.50%</span> 區間，放緩縮表步伐</li>
-            <li>鮑威爾：資產負債表是有效工具，未見下行風險，油價衝擊影響不確定</li>
-            <li>市場預期：利率下行風險高度不對稱，6-9個月後或隨增長擔憂回落</li>
-        </ul>
-        <table>
-            <tr><th>指數</th><th>最新價</th><th>變動</th><th>備註</th></tr>
-            <tr><td>🇭🇰 恆生指數</td><td>24,611.00</td><td class="negative">-0.56%</td><td>科技股承壓</td></tr>
-            <tr><td>🇺🇸 道瓊斯</td><td>45,216.14</td><td class="positive">+0.11%</td><td>小幅反彈</td></tr>
-            <tr><td>🇺🇸 納斯達克</td><td>20,794.64</td><td class="negative">-0.73%</td><td>芯片股下挫</td></tr>
-            <tr><td>🇺🇸 標普500</td><td>6,343.72</td><td class="negative">-0.39%</td><td>收於去年8月以來最低</td></tr>
-            <tr><td>🇪🇺 歐洲Stoxx 600</td><td>580.73</td><td class="positive">+0.94%</td><td>歐股反彈</td></tr>
-            <tr><td>🇬🇧 富時100</td><td>-</td><td class="positive">+1.43%</td><td>英股領漲</td></tr>
-        </table>
-    </div>
-
-    <div class="section" id="hk">
-        <h2>🇭🇰 香港股市 | Hong Kong Stocks</h2>
-        <div class="grid-2">
-            <div class="card">
-                <h3>📈 南向資金</h3>
-                <p>本周流入</p>
-                <p class="price-tag">280億港元</p>
-                <p style="color:#718096;font-size:0.9rem">本月累計流入超660億</p>
-            </div>
-            <div class="card">
-                <h3>📊 恆生科技指數</h3>
-                <p>自2025年10月高點</p>
-                <p class="price-tag" style="color:#f56565">-30%</p>
-                <p style="color:#718096;font-size:0.9rem">最大回撤接近30%</p>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <h1 class="logo">📊 環球財經簡報</h1>
+            <p class="subtitle">Global Finance Brief · Professional Market Intelligence</p>
+            <div class="meta-info">
+                <span class="meta-item">📅 March 31, 2026</span>
+                <span class="badge">每週一 9:00 AM 更新</span>
+                <span class="meta-item">🕐 HKT 13:50</span>
             </div>
         </div>
-        <ul style="margin-top:20px">
-            <li><span class="highlight">騰訊、小米</span>：淨買入斷崖式領先，騰訊今年獲超490億港元流入</li>
-            <li>中國海洋石油、美團、阿里巴巴：各有超70億資金淨流入</li>
-            <li>做空比例：約12%，觸及歷史較高水平，極致狀態下或觸發逼空行情</li>
-            <li>市場觀點：3月下旬或是觀察港股情緒的重要窗口期</li>
-        </ul>
-    </div>
+    </header>
 
-    <div class="section" id="us">
-        <h2>🇺🇸 美國市場 | US Market</h2>
-        <ul>
-            <li><span class="highlight">英偉達</span>：收跌1.40%，較2025年10月高點跌超<span class="negative">20%</span>，正式進入熊市區域</li>
-            <li>芯片股集體重挫：費城半導體指數跌<span class="negative">4.2%</span>，西部數據跌超8%，美光跌超9%</li>
-            <li>房利美、房地美分別大漲<span class="positive">51%</span>、<span class="positive">47%</span></li>
-            <li>美以對伊戰爭進入第五周，特朗普稱談判取得重大進展但威脅或攻擊伊朗油井</li>
-            <li>市場關注：週五非農就業報告（市場休市但報告照常發布）</li>
-        </ul>
-    </div>
-
-    <div class="section" id="crypto">
-        <h2>₿ 加密貨幣 | Cryptocurrency</h2>
-        <div class="grid-2">
-            <div class="card">
-                <h3>比特幣 Bitcoin</h3>
-                <p class="price-tag">$66,809</p>
-                <p class="positive">+1.22% (24H)</p>
-                <hr style="margin:12px 0;border-color:rgba(255,255,255,0.1)">
-                <p>7日: <span class="negative">-5.79%</span> | YTD: <span class="negative">-24.41%</span></p>
-                <p>較歷史高位 $126,198 回撤 <span class="negative">47%</span></p>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-content">
+            <div class="nav-links">
+                <a href="#macro">環球宏觀</a>
+                <a href="#hk">港股</a>
+                <a href="#us">美股</a>
+                <a href="#crypto">加密貨幣</a>
+                <a href="#commodities">大宗商品</a>
+                <a href="#strategy">本週方向</a>
+                <a href="#sources">資料來源</a>
             </div>
-            <div class="card">
-                <h3>市場情緒</h3>
-                <p class="price-tag" style="color:#f56565">極度恐懼</p>
-                <p>Fear & Greed Index: <span class="highlight">9</span></p>
-                <hr style="margin:12px 0;border-color:rgba(255,255,255,0.1)">
-                <p>ETF年內流入: <span class="highlight">$293億美元</span></p>
-                <p>機構持續累積，與散戶恐懼形成背離</p>
-            </div>
+            <a href="https://wa.me/85295812418" target="_blank" class="whatsapp-btn">
+                📱 WhatsApp 查詢
+            </a>
         </div>
-        <ul style="margin-top:20px">
-            <li>關鍵支撐區間: <span class="highlight">$60,000 - $66,000</span></li>
-            <li>長期持有者: 超過460萬枚BTC（約30%持倉）現處虧損狀態</li>
-            <li>Bitcoin Impact Index: 升至57.4（高影響區域），為1月以來最大單周升幅</li>
-        </ul>
-    </div>
+    </nav>
 
-    <div class="section" id="commodities">
-        <h2>🛢️ 大宗商品 | Commodities</h2>
-        <table>
-            <tr><th>商品</th><th>價格</th><th>變動</th><th>備註</th></tr>
-            <tr><td>🛢️ WTI原油</td><td class="highlight">$105.07</td><td class="positive">+3%+</td><td>自2022年以來首次收於$100上方</td></tr>
-            <tr><td>🛢️ 布倫特原油</td><td class="highlight">$109.35</td><td class="positive">+55%</td><td>3月創1988年以來最大單月漲幅</td></tr>
-            <tr><td>🥇 現貨黃金</td><td class="highlight">$4,617</td><td class="positive">+2%</td><td>一度漲破$4,600歷史新高</td></tr>
-            <tr><td>🥈 白銀</td><td class="highlight">$73</td><td class="positive">+4%</td><td>突破$73關口</td></tr>
-        </table>
-        <ul>
-            <li>黃金關鍵位：支撐 $4,500 | 阻力 $4,700</li>
-            <li>油價風險：若霍爾木茲海峽長期中斷，4月或推升至<span class="highlight">$150</span></li>
-            <li>避險需求：地緣政治緊張推升金價創歷史新高</li>
-        </ul>
-    </div>
+    <main class="container">
+        <!-- Macro Section -->
+        <section class="section" id="macro">
+            <div class="section-header">
+                <span class="section-icon">🌍</span>
+                <h2 class="section-title">環球宏觀經濟</h2>
+                <span class="section-subtitle">Global Macro</span>
+            </div>
+            
+            <div class="market-grid">
+                <div class="market-card">
+                    <div class="market-card-header">
+                        <span class="market-name">🇭🇰 恆生指數</span>
+                        <span class="market-flag">HSI</span>
+                    </div>
+                    <div class="market-value">24,611.00</div>
+                    <div class="market-change negative">▼ -0.56% (-139.79)</div>
+                </div>
+                <div class="market-card">
+                    <div class="market-card-header">
+                        <span class="market-name">🇺🇸 道瓊斯</span>
+                        <span class="market-flag">DJI</span>
+                    </div>
+                    <div class="market-value">45,216.14</div>
+                    <div class="market-change positive">▲ +0.11% (+49.50)</div>
+                </div>
+                <div class="market-card">
+                    <div class="market-card-header">
+                        <span class="market-name">🇺🇸 納斯達克</span>
+                        <span class="market-flag">IXIC</span>
+                    </div>
+                    <div class="market-value">20,794.64</div>
+                    <div class="market-change negative">▼ -0.73% (-153.72)</div>
+                </div>
+                <div class="market-card">
+                    <div class="market-card-header">
+                        <span class="market-name">🇺🇸 標普500</span>
+                        <span class="market-flag">SPX</span>
+                    </div>
+                    <div class="market-value">6,343.72</div>
+                    <div class="market-change negative">▼ -0.39% (-25.13)</div>
+                </div>
+            </div>
 
-    <div class="disclaimer">
-        <strong>⚠️ 免責聲明：</strong>本報告由AI自動生成，數據截至2026年3月31日13:50 HKT，僅供參考，不構成投資建議。投資者應自行評估風險。
-    </div>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>市場</th>
+                        <th>指數</th>
+                        <th>最新價</th>
+                        <th>變動</th>
+                        <th>關鍵事件</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>🇪🇺 歐洲</td>
+                        <td>STOXX 600</td>
+                        <td class="highlight">580.73</td>
+                        <td class="positive">+0.94%</td>
+                        <td>歐股反彈</td>
+                    </tr>
+                    <tr>
+                        <td>🇬🇧 英國</td>
+                        <td>富時100</td>
+                        <td>-</td>
+                        <td class="positive">+1.43%</td>
+                        <td>英股領漲歐洲</td>
+                    </tr>
+                    <tr>
+                        <td>🇨🇳 A股</td>
+                        <td>上證指數</td>
+                        <td class="highlight">3,908.28</td>
+                        <td class="negative">-0.38%</td>
+                        <td>成交額1.93萬億</td>
+                    </tr>
+                    <tr>
+                        <td>🇯🇵 日本</td>
+                        <td>日經225</td>
+                        <td>-</td>
+                        <td class="negative">-1.22%</td>
+                        <td>盤中一度跌2.5%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
 
-    <div class="section">
-        <h2>📚 資料來源</h2>
-        <p style="font-size:0.9rem;color:#a0aec0">Investing.com | 新浪財經 | Futu News | 經濟通通訊社 | CoinStats | The Block Beats | 金投網 | 富途資訊 | 21世紀經濟報道 | 華爾街見聞</p>
-        <p style="font-size:0.85rem;color:#718096;margin-top:10px">編制: Kimi Claw Intelligence | © 2026 All Rights Reserved</p>
-    </div>
+        <!-- HK Stocks Section -->
+        <section class="section" id="hk">
+            <div class="section-header">
+                <span class="section-icon">🇭🇰</span>
+                <h2 class="section-title">香港股市</h2>
+                <span class="section-subtitle">Hong Kong Stocks</span>
+            </div>
+            
+            <div class="market-grid">
+                <div class="market-card">
+                    <div class="market-card-header">
+                        <span class="market-name">💰 南向資金本周流入</span>
+                    </div>
+                    <div class="market-value" style="color: var(--positive)">280億</div>
+                    <div class="market-change">港元</div>
+                </div>
+                <div class="market-card">
+                    <div class="market-card-header">
+                        <span class="market-name">📊 本月累計流入</span>
+                    </div>
+                    <div class="market-value" style="color: var(--gold)">660億+</div>
+                    <div class="market-change">港元</div>
+                </div>
+            </div>
 
-    <div class="footer">
-        <p>📊 Daily Global Finance Brief | 每週一 9:00 AM (HKT) 自動更新</p>
-    </div>
+            <ul style="list-style: none; margin-top: 20px;">
+                <li style="padding: 10px 0; padding-left: 24px; position: relative;">
+                    <span style="position: absolute; left: 0; color: var(--gold)">▸</span>
+                    <span class="highlight">騰訊控股</span>：今年獲南向資金流入超 <span class="highlight">490億港元</span>，斷崖式領先
+                </li>
+                <li style="padding: 10px 0; padding-left: 24px; position: relative;">
+                    <span style="position: absolute; left: 0; color: var(--gold)">▸</span>
+                    <span class="highlight">小米集團</span>：淨流入超 <span class="highlight">230億港元</span>
+                </li>
+                <li style="padding: 10px 0; padding-left: 24px; position: relative;">
+                    <span style="position: absolute; left: 0; color: var(--gold)">▸</span>
+                    中海油、美團、阿里：各有超 <span class="highlight">70億</span> 資金淨流入
+                </li>
+                <li style="padding: 10px 0; padding-left: 24px; position: relative;">
+                    <span style="position: absolute; left: 0; color: var(--gold)">▸</span>
+                    恆生科技指數：自2025年10月高點回撤近 <span class="negative">30%</span>
+                </li>
+                <li style="padding: 10px 0; padding-left: 24px; position: relative;">
+                    <span style="position: absolute; left: 0; color: var(--gold)">▸</span>
+                    做空比例約 <span class="highlight">12%</span>，觸及歷史較高水平，極致狀態或觸發逼空行情
+                </li>
+            </ul>
+        </section>
+
+        <!-- US Market Section -->
+        <section class="section" id="us">
+            <div class="section-header">
+                <span class="section-icon">🇺🇸</span>
+                <h2 class="section-title">美國市場</h2>
+                <span class="section-subtitle">US Market</span>
+            </div>
+            
+            <ul style="list-style: none;">
+                <li style="padding: 12px 0; padding-left: 24px; position: relative; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                    <span style="position: absolute; left: 0; color: var(--gold)">▸</span>
+                    <span class="highlight">英偉達 (NVDA)</span>：收跌1.40%，較2025年10月高點跌超 <span class="negative">20%</span>，正式進入熊市區域
+                </li>
+                <li style="padding: 12px 0; padding-left: 24px; position: relative; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                    <span style="position: absolute; left: 0; color: var(--gold)">▸</span>
+                    <span class="highlight">芯片股集體重挫</span>：費城半導體指數跌 <span class="negative">4.2%</span>，西部數據跌超8%，美光跌超9%
+                </li>
+                <li style="padding: 12px 0; padding-left: 24px; position: relative; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                    <span style="position: absolute; left: 0; color: var(--gold)">▸</span>
+                    <span class="positive">房利美 +51%</span>、<span class="positive">房地美 +47%</span>，Bill Ackman 表示股價或飆升
+                </li>
+                <li style="padding: 12px 0; padding-left: 24px; position: relative; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                    <span style="position: absolute; left: 0; color: var(--gold)">▸</span>
+                    美聯儲維持利率 <span class="highlight">4.25%-4.50%</span>，放緩縮表步伐
+                </li>
+                <li style="padding: 12px 0; padding-left: 24px; position: relative;">
+                    <span style="position: absolute; left: 0; color: var(--gold)">▸</span>
+                    美以對伊戰爭進入第五周，特朗普稱願意結束軍事行動即使霍爾木茲海峽仍關閉
+                </li>
+            </ul>
+        </section>
+
+        <!-- Crypto Section -->
+        <section class="section" id="crypto">
+            <div class="section-header">
+                <span class="section-icon">₿</span>
+                <h2 class="section-title">加密貨幣</h2>
+                <span class="section-subtitle">Cryptocurrency</span>
+            </div>
+            
+            <div class="market-grid">
+                <div class="market-card">
+                    <div class="market-card-header">
+                        <span class="market-name">Bitcoin (BTC)</span>
+                        <span style="font-size: 0.85rem; color: var(--text-secondary)">24H</span>
+                    </div>
+                    <div class="market-value" style="font-size: 2.2rem;">$66,809</div>
+                    <div class="market-change positive">▲ +1.22%</div>
+                    <div style="margin-top: 12px; font-size: 0.85rem; color: var(--text-secondary);">
+                        7日: <span class="negative">-5.79%</span> | YTD: <span class="negative">-24.41%</span>
+                    </div>
+                </div>
+                <div class="market-card">
+                    <div class="market-card-header">
+                        <span class="market-name">市場情緒</span>
+                    </div>
+                    <div class="market-value" style="font-size: 1.8rem; color: var(--negative);">極度恐懼</div>
+                    <div class="market-change">Fear & Greed Index: <span class="highlight">9</span></div>
+                    <div style="margin-top: 12px; font-size: 0.85rem; color: var(--text-secondary);">
+                        ETF年內流入: <span class="highlight">$293億</span>
+                    </div>
+                </div>
+            </div>
+
+            <ul style="list-style: none; margin-top: 20px;">
+                <li style="padding: 10px 0; padding-left: 24px; position: relative;">
+                    <span style="position: absolute; left: 0; color: var(--gold)">▸</span>
+                    關鍵支撐區間: <span class="highlight">$60,000 - $66,000</span>
+                </li>
+                <li style="padding: 10px 0; padding-left: 24px; position: relative;">
+                    <span style="position: absolute; left: 0; color: var(--gold)">▸</span>
+                    長期持有者: 超過460萬枚BTC（約30%持倉）現處虧損狀態
+                </li>
+                <li style="padding: 10px 0; padding-left: 24px; position: relative;">
+                    <span style="position: absolute; left: 0; color: var(--gold)">▸</span>
+                    Bitcoin Impact Index: 升至 <span class="highlight">57.4</span>（高影響區域）
+                </li>
+            </ul>
+        </section>
+
+        <!-- Commodities Section -->
+        <section class="section" id="commodities">
+            <div class="section-header">
+                <span class="section-icon">🛢️</span>
+                <h2 class="section-title">大宗商品</h2>
+                <span class="section-subtitle">Commodities</span>
+            </div>
+            
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>商品</th>
+                        <th>價格</th>
+                        <th>變動</th>
+                        <th>關鍵數據</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>🛢️ WTI原油</td>
+                        <td class="highlight">$105.07</td>
+                        <td class="positive">+3%+</td>
+                        <td>自2022年以來首次收於$100上方</td>
+                    </tr>
+                    <tr>
+                        <td>🛢️ 布倫特原油</td>
+                        <td class="highlight">$109.35</td>
+                        <td class="positive">+55%</td>
+                        <td>3月創1988年以來最大單月漲幅</td>
+                    </tr>
+                    <tr>
+                        <td>🥇 現貨黃金</td>
+                        <td class="highlight">$4,617</td>
+                        <td class="positive">+2%</td>
+                        <td>一度漲破$4,600歷史新高</td>
+                    </tr>
+                    <tr>
+                        <td>🥈 白銀</td>
+                        <td class="highlight">$73</td>
+                        <td class="positive">+4%</td>
+                        <td>突破$73關口</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <ul style="list-style: none; margin-top: 20px;">
+                <li style="padding: 10px 0; padding-left: 24px; position: relative;">
+                    <span style="position: absolute; left: 0; color: var(--gold)">▸</span>
+                    黃金關鍵位：支撐 $4,500 | 阻力 $4,700
+                </li>
+                <li style="padding: 10px 0; padding-left: 24px; position: relative;">
+                    <span style="position: absolute; left: 0; color: var(--gold)">▸</span>
+                    油價風險：若霍爾木茲海峽長期中斷，4月或推升至 <span class="highlight">$150</span>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Investment Strategy Section -->
+        <section class="section" id="strategy">
+            <div class="section-header">
+                <span class="section-icon">🎯</span>
+                <h2 class="section-title">本週投資方向</h2>
+                <span class="section-subtitle">Weekly Investment Strategy</span>
+            </div>
+            
+            <div class="strategy-box">
+                <div class="strategy-title">📈 策略建議</div>
+                <ul class="strategy-list">
+                    <li><strong>港股：</strong>恆指24,000-24,800區間震盪，南向資金持續流入科技股，短線可關注騰訊、小米反彈機會</li>
+                    <li><strong>美股：</strong>芯片股承壓，建議避開半導體板塊；房利美、房地美暴漲後回調風險高，不宜追</li>
+                    <li><strong>加密貨幣：</strong>BTC處極度恐懼區域，長線投資者可考慮$60K-66K區間分批累積</li>
+                    <li><strong>大宗商品：</strong>黃金創新高後或有獲利回吐，原油受地緣政治支撐，短線偏多</li>
+                    <li><strong>外匯：</strong>美聯儲放緩縮表，美元或承壓，關注非美貨幣反彈</li>
+                </ul>
+            </div>
+
+            <div class="strategy-box" style="margin-top: 20px; background: linear-gradient(135deg, rgba(239,68,68,0.1) 0%, rgba(252,165,165,0.05) 100%); border-color: rgba(239,68,68,0.3);">
+                <div class="strategy-title" style="color: #fca5a5;">⚠️ 風險提示</div>
+                <ul class="strategy-list">
+                    <li>美以對伊戰爭持續，地緣政治風險高企</li>
+                    <li>英偉達等科技股進入熊市，或拖累整體市場情緒</li>
+                    <li>3月非農就業報告將於週五發布，或引發市場波動</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Sources Section -->
+        <section class="section" id="sources">
+            <div class="section-header">
+                <span class="section-icon">📚</span>
+                <h2 class="section-title">資料來源</h2>
+                <span class="section-subtitle">Data Sources</span>
+            </div>
+            
+            <div class="sources-grid">
+                <a href="https://hk.investing.com" target="_blank" class="source-item" style="text-decoration: none;">
+                    <span class="source-number">1</span>
+                    <span class="source-link">Investing.com 香港</span>
+                    <span class="external-icon">↗</span>
+                </a>
+                <a href="https://finance.sina.com.cn" target="_blank" class="source-item" style="text-decoration: none;">
+                    <span class="source-number">2</span>
+                    <span class="source-link">新浪財經</span>
+                    <span class="external-icon">↗</span>
+                </a>
+                <a href="https://news.futunn.com" target="_blank" class="source-item" style="text-decoration: none;">
+                    <span class="source-number">3</span>
+                    <span class="source-link">富途資訊 Futu News</span>
+                    <span class="external-icon">↗</span>
+                </a>
+                <a href="https://wallstreetcn.com" target="_blank" class="source-item" style="text-decoration: none;">
+                    <span class="source-number">4</span>
+                    <span class="source-link">華爾街見聞</span>
+                    <span class="external-icon">↗</span>
+                </a>
+                <a href="https://coinstats.app" target="_blank" class="source-item" style="text-decoration: none;">
+                    <span class="source-number">5</span>
+                    <span class="source-link">CoinStats</span>
+                    <span class="external-icon">↗</span>
+                </a>
+                <a href="https://www.theblockbeats.info" target="_blank" class="source-item" style="text-decoration: none;">
+                    <span class="source-number">6</span>
+                    <span class="source-link">The Block Beats</span>
+                    <span class="external-icon">↗</span>
+                </a>
+                <a href="https://energy.cngold.org" target="_blank" class="source-item" style="text-decoration: none;">
+                    <span class="source-number">7</span>
+                    <span class="source-link">金投原油網</span>
+                    <span class="external-icon">↗</span>
+                </a>
+                <a href="https://www.21jingji.com" target="_blank" class="source-item" style="text-decoration: none;">
+                    <span class="source-number">8</span>
+                    <span class="source-link">21世紀經濟報道</span>
+                    <span class="external-icon">↗</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- WhatsApp Contact Section -->
+        <section class="contact-section">
+            <div class="contact-title">📱 想知更多投資資訊？</div>
+            <p class="contact-desc">直接 WhatsApp 我，獲取即時市場分析及投資建議</p>
+            <a href="https://wa.me/85295812418" target="_blank" class="whatsapp-large">
+                <span>💬</span>
+                <span>WhatsApp: +852 9581 2418</span>
+            </a>
+        </section>
+
+        <!-- Disclaimer -->
+        <div class="disclaimer">
+            <p class="disclaimer-text">
+                <strong>免責聲明：</strong>本報告由AI自動生成，數據截至2026年3月31日13:50 HKT，僅供參考，不構成投資建議。投資者應自行評估風險，過往表現不代表未來收益。資料來自公開渠道，不保證其準確性。
+            </p>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-brand">📊 Global Finance Brief · 環球財經簡報</div>
+        <p>編制: Kimi Claw Intelligence | 每週一 9:00 AM (HKT) 更新</p>
+        <p style="margin-top: 8px;">© 2026 All Rights Reserved</p>
+    </footer>
 </body>
 </html>
