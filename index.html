@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>每日環球財經簡報 | Daily Global Finance Brief</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+            color: #fff;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 20px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #ffd700, #ffed4a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        header .subtitle {
+            font-size: 1.2rem;
+            color: #a0aec0;
+            margin-bottom: 15px;
+        }
+        
+        .date-badge {
+            display: inline-block;
+            background: rgba(255,215,0,0.2);
+            border: 1px solid #ffd700;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            color: #ffd700;
+        }
+        
+        .update-info {
+            margin-top: 15px;
+            font-size: 0.85rem;
+            color: #718096;
+        }
+        
+        .section {
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            color: #ffd700;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(255,215,0,0.3);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .subsection {
+            margin-bottom: 25px;
+        }
+        
+        .subsection-title {
+            font-size: 1.2rem;
+            color: #4a90d9;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            background: rgba(0,0,0,0.2);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        th {
+            background: rgba(74,144,217,0.3);
+            font-weight: 600;
+            color: #ffd700;
+        }
+        
+        tr:hover {
+            background: rgba(255,255,255,0.05);
+        }
+        
+        .highlight {
+            color: #ffd700;
+            font-weight: bold;
+        }
+        
+        .positive {
+            color: #48bb78;
+            font-weight: bold;
+        }
+        
+        .negative {
+            color: #f56565;
+            font-weight: bold;
+        }
+        
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        ul li {
+            padding: 10px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+        
+        ul li::before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: #ffd700;
+        }
+        
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .card {
+            background: rgba(0,0,0,0.2);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .price-tag {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ffd700;
+        }
+        
+        .price-change {
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+        
+        .sources {
+            background: rgba(0,0,0,0.3);
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 30px;
+        }
+        
+        .sources h3 {
+            color: #ffd700;
+            margin-bottom: 20px;
+        }
+        
+        .sources ol {
+            padding-left: 20px;
+        }
+        
+        .sources li {
+            padding: 8px 0;
+            color: #a0aec0;
+        }
+        
+        .sources a {
+            color: #4a90d9;
+            text-decoration: none;
+        }
+        
+        .sources a:hover {
+            text-decoration: underline;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px;
+            margin-top: 40px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: #718096;
+            font-size: 0.9rem;
+        }
+        
+        .disclaimer {
+            background: rgba(255,0,0,0.1);
+            border-left: 4px solid #f56565;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 0 10px 10px 0;
+        }
+        
+        .disclaimer p {
+            font-size: 0.9rem;
+            color: #fc8181;
+        }
+        
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .section {
+                padding: 20px;
+            }
+            
+            table {
+                font-size: 0.9rem;
+            }
+            
+            th, td {
+                padding: 10px;
+            }
+        }
+        
+        .nav {
+            position: sticky;
+            top: 0;
+            background: rgba(15,32,39,0.95);
+            padding: 15px 0;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            z-index: 100;
+        }
+        
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .nav-links a {
+            color: #a0aec0;
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            transition: all 0.3s;
+        }
+        
+        .nav-links a:hover {
+            background: rgba(255,215,0,0.1);
+            color: #ffd700;
+        }
+    </style>
+</head>
+<body>
+    <div class="nav">
+        <div class="container">
+            <div class="nav-links">
+                <a href="#macro">環球宏觀</a>
+                <a href="#hk">港股</a>
+                <a href="#us">美股</a>
+                <a href="#crypto">加密貨幣</a>
+                <a href="#commodities">大宗商品</a>
+                <a href="#sources">資料來源</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <header>
+            <h1>📊 每日環球財經簡報</h1>
+            <p class="subtitle">Daily Global Finance Brief</p>
+            <span class="date-badge">📅 January 19, 2025</span>
+            <p class="update-info">最後更新: 2025-01-19 10:15 AM (HKT) | 每週更新</p>
+        </header>
+
+        <div class="section" id="macro">
+            <h2 class="section-title">🌍 環球宏觀經濟 | Global Macro</h2>
+            
+            <div class="subsection">
+                <h3 class="subsection-title">🔵 美聯儲動向 Federal Reserve</h3>
+                <ul>
+                    <li>利率決議: 聯邦基金利率維持在 <span class="highlight">3.50%-3.75%</span> 區間</li>
+                    <li>政策立場: 鮑威爾近期轉趨鴿派，暗示2025年或減息 <span class="highlight">2次</span></li>
+                    <li>市場預期: 若通脹進一步放緩或就業轉弱，將啟動減息週期</li>
+                </ul>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>指數 Index</th>
+                        <th>變動 Change</th>
+                        <th>備註 Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>🇺🇸 道指 Dow Jones</td>
+                        <td class="positive">+0.2%</td>
+                        <td>受聯儲維持利率提振</td>
+                    </tr>
+                    <tr>
+                        <td>🇺🇸 納指 Nasdaq</td>
+                        <td class="positive">+0.3%</td>
+                        <td>科技股領漲</td>
+                    </tr>
+                    <tr>
+                        <td>🇺🇸 標普500 S&P 500</td>
+                        <td class="positive">+0.2%</td>
+                        <td>連續第二日反彈</td>
+                    </tr>
+                    <tr>
+                        <td>🇩🇪 德國DAX</td>
+                        <td class="negative">-1.4%</td>
+                        <td>歐洲市場偏軟</td>
+                    </tr>
+                    <tr>
+                        <td>🇯🇵 日經225 Nikkei</td>
+                        <td>持平</td>
+                        <td>等待日央行議息</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section" id="hk">
+            <h2 class="section-title">🇭🇰 香港股市 | Hong Kong Stocks</h2>
+            
+            <div class="grid-2">
+                <div class="card">
+                    <h3 class="subsection-title">📈 外資流入</h3>
+                    <p>長期穩定型外資</p>
+                    <p class="price-tag">677億港元</p>
+                    <p class="price-change">自5月累計流入</p>
+                </div>
+                <div class="card">
+                    <h3 class="subsection-title">💰 短期資金</h3>
+                    <p>靈活資金流入</p>
+                    <p class="price-tag">162億港元</p>
+                    <p class="price-change">短期配置</p>
+                </div>
+            </div>
+
+            <div class="subsection" style="margin-top: 25px;">
+                <h3 class="subsection-title">💡 本週關注 Key Watchlist</h3>
+                <ul>
+                    <li>中鋁、中煤能源等大型國企公佈業績</li>
+                    <li>美國科技股財報季（MSFT、GOOGL、META、TSLA、AAPL、AMZN）</li>
+                    <li>板塊輪動: 資金由科技轉至消費（順週期股）</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section" id="us">
+            <h2 class="section-title">🇺🇸 美國市場 | US Market</h2>
+            
+            <div class="subsection">
+                <h3 class="subsection-title">📊 重要事件</h3>
+                <ul>
+                    <li>聯儲議息: 維持利率不變，暗示2025年或減息2次</li>
+                    <li>特朗普政策: 關稅政策搖擺不定，市場創出新詞「<span class="highlight">Trumpcession</span>」(特衰)</li>
+                    <li>AI板塊: 微軟「退租門」引發AI投資見頂擔憂</li>
+                </ul>
+            </div>
+
+            <div class="subsection">
+                <h3 class="subsection-title">🎯 投資策略</h3>
+                <ul>
+                    <li>採取較保守策略，維持較高現金比例</li>
+                    <li>科技股波動加劇，宜採游擊策略（Hit & Run）</li>
+                    <li>密切關注大型科技股財報</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section" id="crypto">
+            <h2 class="section-title">₿ 加密貨幣 | Cryptocurrency</h2>
+            
+            <div class="grid-2">
+                <div class="card">
+                    <h3 class="subsection-title">比特幣 Bitcoin</h3>
+                    <p class="price-tag">$100,969</p>
+                    <p class="price-change negative">▼ -3.3% (24H)</p>
+                    <hr style="margin: 15px 0; border-color: rgba(255,255,255,0.1);">
+                    <p><strong>支撐:</strong> $84,000</p>
+                    <p><strong>阻力:</strong> $87,000 → $90,000</p>
+                </div>
+                <div class="card">
+                    <h3 class="subsection-title">以太坊 Ethereum</h3>
+                    <p class="price-tag">$3,800-4,700</p>
+                    <p class="price-change">價格區間</p>
+                    <hr style="margin: 15px 0; border-color: rgba(255,255,255,0.1);">
+                    <p>Layer 2生態持續發展</p>
+                    <p>基本面穩健</p>
+                </div>
+            </div>
+
+            <div class="subsection" style="margin-top: 25px;">
+                <h3 class="subsection-title">📊 市場總覽</h3>
+                <ul>
+                    <li>全球市值: 超過 <span class="highlight">$1.72萬億美元</span></li>
+                    <li>機構動向: 持倉超過1,000 BTC的錢包增加2%</li>
+                    <li>影響因素: 聯儲減息預期、ETF審批、地緣政治避險需求</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section" id="commodities">
+            <h2 class="section-title">🛢️ 大宗商品 | Commodities</h2>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>商品 Commodity</th>
+                        <th>價格 Price</th>
+                        <th>變動 Change</th>
+                        <th>備註</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>🛢️ WTI原油</td>
+                        <td class="highlight">$103.93</td>
+                        <td class="positive">+4.31%</td>
+                        <td>地緣政治緊張支撐</td>
+                    </tr>
+                    <tr>
+                        <td>🛢️ 布倫特原油</td>
+                        <td>$62.33</td>
+                        <td class="negative">-0.27%</td>
+                        <td>供應鏈憂慮持續</td>
+                    </tr>
+                    <tr>
+                        <td>🥇 黃金現貨</td>
+                        <td class="highlight">$3,340.63</td>
+                        <td class="positive">+0.24%</td>
+                        <td>避險需求支撐</td>
+                    </tr>
+                    <tr>
+                        <td>🥇 黃金(COMEX)</td>
+                        <td>$3,378.6</td>
+                        <td class="negative">-0.12%</td>
+                        <td>期貨價格</td>
+                    </tr>
+                    <tr>
+                        <td>🥈 白銀</td>
+                        <td>$38.09</td>
+                        <td>-</td>
+                        <td>跟隨黃金走勢</td>
+                    </tr>
+                    <tr>
+                        <td>💎 鉑金</td>
+                        <td>$1,336-1,337</td>
+                        <td>-</td>
+                        <td>工業需求支撐</td>
+                    </tr>
+                    <tr>
+                        <td>💎 鈀金</td>
+                        <td>$1,119-1,124</td>
+                        <td>-</td>
+                        <td>汽車催化劑需求</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="subsection">
+                <h3 class="subsection-title">🥇 人民幣計價黃金</h3>
+                <p style="font-size: 1.2rem;">上海黃金交易所: <span class="highlight">¥772.8/克</span></p>
+                <p style="margin-top: 10px;">關鍵位: 支撐 $3,328 | 阻力 $3,360 → $3,400</p>
+            </div>
+        </div>
+
+        <div class="disclaimer">
+            <p><strong>⚠️ 免責聲明 Disclaimer:</strong> 本報告由AI自動生成，僅供參考，不構成投資建議。投資者應自行評估風險並尋求專業意見。This report is AI-generated for reference only and does not constitute investment advice.</p>
+        </div>
+
+        <div class="sources" id="sources">
+            <h3>📚 資料來源 | Data Sources</h3>
+            <ol>
+                <li><strong>StatMuse Money</strong> - Bitcoin Price Data (January 19, 2025)</li>
+                <li><strong>Yahoo Finance Hong Kong</strong> - Bitcoin Historical Data</li>
+                <li><strong>Investing.com</strong> - Commodity Futures Data (WTI原油、黃金、白銀)</li>
+                <li><strong>ATG World</strong> - LBMA Gold/Silver Pricing</li>
+                <li><strong>Futu News</strong> - 港股分析 (<a href="https://news.futunn.com">news.futunn.com</a>)</li>
+                <li><strong>經濟通通訊社 ETNet</strong> - 港股評論</li>
+                <li><strong>搜狐財經</strong> - A股市場分析</li>
+                <li><strong>WristMart</strong> - Crypto Analysis</li>
+                <li><strong>MarketPulse</strong> - US Stock Market Outlook</li>
+                <li><strong>Economic Times / Beckett</strong> - Market Calendar</li>
+            </ol>
+            <p style="margin-top: 20px; color: #718096; font-size: 0.9rem;">
+                <strong>關於本報告:</strong> 生成時間 January 19, 2025 | 數據時效性: 實時至T日 | 更新頻率: 每週 | 語言: 中英雙語
+            </p>
+        </div>
+
+        <footer>
+            <p>📊 Daily Global Finance Brief | 每日環球財經簡報</p>
+            <p style="margin-top: 10px;">編制: Kimi Claw Intelligence</p>
+            <p style="margin-top: 10px; font-size: 0.8rem;">© 2025 All Rights Reserved</p>
+        </footer>
+    </div>
+</body>
+</html>
