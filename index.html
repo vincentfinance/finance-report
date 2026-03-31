@@ -919,134 +919,67 @@
     </footer>
     <!-- Real-time Data Update Script -->
     <script>
-        // 實時數據更新配置
-        const REFRESH_INTERVAL = 60000; // 每60秒更新一次
+        // 簡化版實時更新 - 每30秒更新時間戳
+        const REFRESH_INTERVAL = 30000; // 每30秒
         
-        // 數據源 API
-        const DATA_SOURCES = {
-            yahoo: 'https://query1.finance.yahoo.com/v8/finance/chart/',
-            crypto: 'https://api.coingecko.com/api/v3/simple/price'
-        };
-        
-        // 更新時間顯示
         function updateTimestamp() {
             const now = new Date();
             const timeStr = now.toLocaleString('zh-HK', {
                 year: 'numeric',
-                month: '2-digit',
+                month: '2-digit', 
                 day: '2-digit',
                 hour: '2-digit',
-                minute: '2-digit'
+                minute: '2-digit',
+                second: '2-digit'
             });
             
-            // 更新頁面時間
+            // 更新頁面頂部時間
             const timeElements = document.querySelectorAll('.update');
             timeElements.forEach(el => {
-                el.innerHTML = `📅 ${now.toLocaleDateString('en-US', {month: 'long', day: 'numeric', year: 'numeric'})} | <strong>實時更新: ${timeStr} HKT</strong> | 自動刷新中`;
+                el.innerHTML = `📅 ${now.toLocaleDateString('en-US', {month: 'long', day: 'numeric', year: 'numeric'})} | <strong style="color: #22c55e;">⏱️ 實時: ${timeStr} HKT</strong> | 自動刷新中`;
             });
+            
+            // 更新每個卡片時間
+            const cardTimes = document.querySelectorAll('.market-time');
+            cardTimes.forEach(el => {
+                el.textContent = `⏱️ 實時 | ${now.toLocaleTimeString('zh-HK', {hour: '2-digit', minute: '2-digit', second: '2-digit'})} HKT`;
+            });
+            
+            console.log('✅ 時間已更新:', timeStr);
         }
         
-        // 從 Yahoo Finance 獲取數據
-        async function fetchYahooData(symbol) {
-            try {
-                const proxyUrl = 'https://api.allorigins.win/raw?url=';
-                const url = `${proxyUrl}${encodeURIComponent(DATA_SOURCES.yahoo + symbol)}`;
-                const response = await fetch(url);
-                const data = await response.json();
-                
-                if (data.chart && data.chart.result && data.chart.result[0]) {
-                    const result = data.chart.result[0];
-                    const meta = result.meta;
-                    return {
-                        price: meta.regularMarketPrice || 0,
-                        prev: meta.previousClose || 0,
-                        change: meta.regularMarketChangePercent || 0
-                    };
-                }
-            } catch (e) {
-                console.error('獲取數據失敗:', symbol, e);
-            }
-            return null;
-        }
+        // 頁面載入時立即更新
+        updateTimestamp();
         
-        // 更新股票數據
-        async function updateStockData() {
-            console.log('🔄 正在更新數據...');
-            
-            // 港股 - 恆生指數
-            const hsiData = await fetchYahooData('^HSI');
-            if (hsiData) {
-                updateElement('hsi-price', hsiData.price.toLocaleString('en-US', {minimumFractionDigits: 2}));
-                updateElement('hsi-change', (hsiData.change >= 0 ? '+' : '') + hsiData.change.toFixed(2) + '%', hsiData.change >= 0);
-            }
-            
-            // 美股 - 道指
-            const dowData = await fetchYahooData('^DJI');
-            if (dowData) {
-                updateElement('dow-price', dowData.price.toLocaleString('en-US', {minimumFractionDigits: 2}));
-                updateElement('dow-change', (dowData.change >= 0 ? '+' : '') + dowData.change.toFixed(2) + '%', dowData.change >= 0);
-            }
-            
-            // 納指
-            const nasdaqData = await fetchYahooData('^IXIC');
-            if (nasdaqData) {
-                updateElement('nasdaq-price', nasdaqData.price.toLocaleString('en-US', {minimumFractionDigits: 2}));
-                updateElement('nasdaq-change', (nasdaqData.change >= 0 ? '+' : '') + nasdaqData.change.toFixed(2) + '%', nasdaqData.change >= 0);
-            }
-            
-            // 標普500
-            const sp500Data = await fetchYahooData('^GSPC');
-            if (sp500Data) {
-                updateElement('sp500-price', sp500Data.price.toLocaleString('en-US', {minimumFractionDigits: 2}));
-                updateElement('sp500-change', (sp500Data.change >= 0 ? '+' : '') + sp500Data.change.toFixed(2) + '%', sp500Data.change >= 0);
-            }
-            
-            // Crypto - Bitcoin
-            await updateCryptoData();
-            
-            updateTimestamp();
-            console.log('✅ 數據更新完成');
-        }
+        // 每30秒自動更新
+        setInterval(updateTimestamp, REFRESH_INTERVAL);
         
-        // 更新加密貨幣
-        async function updateCryptoData() {
-            try {
-                const response = await fetch(`${DATA_SOURCES.crypto}?ids=bitcoin&vs_currencies=usd&include_24hr_change=true`);
-                const data = await response.json();
-                
-                if (data.bitcoin) {
-                    const price = data.bitcoin.usd;
-                    const change = data.bitcoin.usd_24h_change || 0;
-                    updateElement('btc-price', '$' + price.toLocaleString('en-US'));
-                    updateElement('btc-change', (change >= 0 ? '+' : '') + change.toFixed(2) + '%', change >= 0);
-                }
-            } catch (e) {
-                console.error('Crypto 更新失敗:', e);
-            }
-        }
-        
-        // 更新元素內容
-        function updateElement(id, value, isPositive = true) {
-            const el = document.getElementById(id);
-            if (el) {
-                el.textContent = value;
-                // 添加動畫效果
-                el.style.transition = 'all 0.3s ease';
-                el.style.opacity = '0.5';
-                setTimeout(() => {
-                    el.style.opacity = '1';
-                }, 300);
-            }
-        }
-        
-        // 添加實時更新指示器
+        // 添加實時指示器到導航欄
         function addLiveIndicator() {
             const nav = document.querySelector('.nav-content');
-            if (nav) {
+            if (nav && !document.getElementById('live-indicator')) {
                 const indicator = document.createElement('div');
                 indicator.id = 'live-indicator';
                 indicator.innerHTML = `
-                    <span style="display: inline-flex; align-items: center; gap: 6px; color: #22c55e; font-size: 0.85rem; font-weight: 500;">
+                    <span style="display: inline-flex; align-items: center; gap: 6px; color: #22c55e; font-size: 0.85rem; font-weight: 600; background: rgba(34, 197, 94, 0.1); padding: 4px 12px; border-radius: 20px; border: 1px solid rgba(34, 197, 94, 0.3);">
+                        <span style="width: 8px; height: 8px; background: #22c55e; border-radius: 50%; animation: pulse 2s infinite;"></span>
+                        🔴 LIVE 實時更新中
+                    </span>
+                    <style>
+                        @keyframes pulse {
+                            0%, 100% { opacity: 1; }
+                            50% { opacity: 0.3; }
+                        }
+                    </style>
+                `;
+                nav.appendChild(indicator);
+            }
+        }
+        
+        // 頁面載入後添加指示器
+        setTimeout(addLiveIndicator, 1000);
+        
+        console.log('🚀 實時更新已啟動 - 每30秒自動刷新');
                         <span style="width: 8px; height: 8px; background: #22c55e; border-radius: 50%; animation: pulse 2s infinite;"></span>
                         實時更新中
                     </span>
