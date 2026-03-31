@@ -507,32 +507,32 @@
                         <span class="market-name">🇭🇰 恆生指數</span>
                         <span class="market-flag">HSI</span>
                     </div>
-                    <div class="market-value">24,788.14</div>
-                    <div class="market-change negative">▼ +0.15% (-139.79)</div>
+                    <div class="market-value" id="hsi-price">24,788.14</div>
+                    <div class="market-change negative" id="hsi-change">▼ +0.15%</div>
                 </div>
                 <div class="market-card">
                     <div class="market-card-header">
                         <span class="market-name">🇺🇸 道瓊斯</span>
                         <span class="market-flag">DJI</span>
                     </div>
-                    <div class="market-value">45,216.14</div>
-                    <div class="market-change positive">▲ +0.11% (+49.50)</div>
+                    <div class="market-value" id="dow-price">45,216.14</div>
+                    <div class="market-change positive" id="dow-change">▲ +0.11%</div>
                 </div>
                 <div class="market-card">
                     <div class="market-card-header">
                         <span class="market-name">🇺🇸 納斯達克</span>
                         <span class="market-flag">IXIC</span>
                     </div>
-                    <div class="market-value">20,794.64</div>
-                    <div class="market-change negative">▼ -0.73% (-153.72)</div>
+                    <div class="market-value" id="nasdaq-price">20,794.64</div>
+                    <div class="market-change negative" id="nasdaq-change">▼ -0.73%</div>
                 </div>
                 <div class="market-card">
                     <div class="market-card-header">
                         <span class="market-name">🇺🇸 標普500</span>
                         <span class="market-flag">SPX</span>
                     </div>
-                    <div class="market-value">6,343.72</div>
-                    <div class="market-change negative">▼ -0.39% (-25.13)</div>
+                    <div class="market-value" id="sp500-price">6,343.72</div>
+                    <div class="market-change negative" id="sp500-change">▼ -0.39%</div>
                 </div>
             </div>
 
@@ -674,8 +674,8 @@
                         <span class="market-name">Bitcoin (BTC)</span>
                         <span style="font-size: 0.85rem; color: var(--text-secondary)">24H</span>
                     </div>
-                    <div class="market-value" style="font-size: 2.2rem;">$66,841</div>
-                    <div class="market-change positive">▲ -1.32%</div>
+                    <div class="market-value" style="font-size: 2.2rem;" id="btc-price">$66,841</div>
+                    <div class="market-change positive" id="btc-change">▲ -1.32%</div>
                     <div style="margin-top: 12px; font-size: 0.85rem; color: var(--text-secondary);">
                         7日: <span class="negative">-5.79%</span> | YTD: <span class="negative">-24.41%</span>
                     </div>
@@ -913,5 +913,173 @@
         <p>編制: Kimi Claw Intelligence | 每週一 9:00 AM (HKT) 更新</p>
         <p style="margin-top: 8px;">© 2026 All Rights Reserved</p>
     </footer>
+    <!-- Real-time Data Update Script -->
+    <script>
+        // 實時數據更新配置
+        const REFRESH_INTERVAL = 60000; // 每60秒更新一次
+        
+        // 數據源 API
+        const DATA_SOURCES = {
+            yahoo: 'https://query1.finance.yahoo.com/v8/finance/chart/',
+            crypto: 'https://api.coingecko.com/api/v3/simple/price'
+        };
+        
+        // 更新時間顯示
+        function updateTimestamp() {
+            const now = new Date();
+            const timeStr = now.toLocaleString('zh-HK', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            
+            // 更新頁面時間
+            const timeElements = document.querySelectorAll('.update');
+            timeElements.forEach(el => {
+                el.innerHTML = `📅 ${now.toLocaleDateString('en-US', {month: 'long', day: 'numeric', year: 'numeric'})} | <strong>實時更新: ${timeStr} HKT</strong> | 自動刷新中`;
+            });
+        }
+        
+        // 從 Yahoo Finance 獲取數據
+        async function fetchYahooData(symbol) {
+            try {
+                const proxyUrl = 'https://api.allorigins.win/raw?url=';
+                const url = `${proxyUrl}${encodeURIComponent(DATA_SOURCES.yahoo + symbol)}`;
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (data.chart && data.chart.result && data.chart.result[0]) {
+                    const result = data.chart.result[0];
+                    const meta = result.meta;
+                    return {
+                        price: meta.regularMarketPrice || 0,
+                        prev: meta.previousClose || 0,
+                        change: meta.regularMarketChangePercent || 0
+                    };
+                }
+            } catch (e) {
+                console.error('獲取數據失敗:', symbol, e);
+            }
+            return null;
+        }
+        
+        // 更新股票數據
+        async function updateStockData() {
+            console.log('🔄 正在更新數據...');
+            
+            // 港股 - 恆生指數
+            const hsiData = await fetchYahooData('^HSI');
+            if (hsiData) {
+                updateElement('hsi-price', hsiData.price.toLocaleString('en-US', {minimumFractionDigits: 2}));
+                updateElement('hsi-change', (hsiData.change >= 0 ? '+' : '') + hsiData.change.toFixed(2) + '%', hsiData.change >= 0);
+            }
+            
+            // 美股 - 道指
+            const dowData = await fetchYahooData('^DJI');
+            if (dowData) {
+                updateElement('dow-price', dowData.price.toLocaleString('en-US', {minimumFractionDigits: 2}));
+                updateElement('dow-change', (dowData.change >= 0 ? '+' : '') + dowData.change.toFixed(2) + '%', dowData.change >= 0);
+            }
+            
+            // 納指
+            const nasdaqData = await fetchYahooData('^IXIC');
+            if (nasdaqData) {
+                updateElement('nasdaq-price', nasdaqData.price.toLocaleString('en-US', {minimumFractionDigits: 2}));
+                updateElement('nasdaq-change', (nasdaqData.change >= 0 ? '+' : '') + nasdaqData.change.toFixed(2) + '%', nasdaqData.change >= 0);
+            }
+            
+            // 標普500
+            const sp500Data = await fetchYahooData('^GSPC');
+            if (sp500Data) {
+                updateElement('sp500-price', sp500Data.price.toLocaleString('en-US', {minimumFractionDigits: 2}));
+                updateElement('sp500-change', (sp500Data.change >= 0 ? '+' : '') + sp500Data.change.toFixed(2) + '%', sp500Data.change >= 0);
+            }
+            
+            // Crypto - Bitcoin
+            await updateCryptoData();
+            
+            updateTimestamp();
+            console.log('✅ 數據更新完成');
+        }
+        
+        // 更新加密貨幣
+        async function updateCryptoData() {
+            try {
+                const response = await fetch(`${DATA_SOURCES.crypto}?ids=bitcoin&vs_currencies=usd&include_24hr_change=true`);
+                const data = await response.json();
+                
+                if (data.bitcoin) {
+                    const price = data.bitcoin.usd;
+                    const change = data.bitcoin.usd_24h_change || 0;
+                    updateElement('btc-price', '$' + price.toLocaleString('en-US'));
+                    updateElement('btc-change', (change >= 0 ? '+' : '') + change.toFixed(2) + '%', change >= 0);
+                }
+            } catch (e) {
+                console.error('Crypto 更新失敗:', e);
+            }
+        }
+        
+        // 更新元素內容
+        function updateElement(id, value, isPositive = true) {
+            const el = document.getElementById(id);
+            if (el) {
+                el.textContent = value;
+                // 添加動畫效果
+                el.style.transition = 'all 0.3s ease';
+                el.style.opacity = '0.5';
+                setTimeout(() => {
+                    el.style.opacity = '1';
+                }, 300);
+            }
+        }
+        
+        // 添加實時更新指示器
+        function addLiveIndicator() {
+            const nav = document.querySelector('.nav-content');
+            if (nav) {
+                const indicator = document.createElement('div');
+                indicator.id = 'live-indicator';
+                indicator.innerHTML = `
+                    <span style="display: inline-flex; align-items: center; gap: 6px; color: #22c55e; font-size: 0.85rem; font-weight: 500;">
+                        <span style="width: 8px; height: 8px; background: #22c55e; border-radius: 50%; animation: pulse 2s infinite;"></span>
+                        實時更新中
+                    </span>
+                `;
+                nav.appendChild(indicator);
+            }
+        }
+        
+        // 添加脈衝動畫
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes pulse {
+                0%, 100% { opacity: 1; transform: scale(1); }
+                50% { opacity: 0.5; transform: scale(1.1); }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('🚀 啟動實時數據更新...');
+            addLiveIndicator();
+            updateStockData(); // 立即更新一次
+            
+            // 定時更新
+            setInterval(updateStockData, REFRESH_INTERVAL);
+            
+            // 每10秒更新時間
+            setInterval(updateTimestamp, 10000);
+        });
+        
+        // 頁面可見時立即更新
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible') {
+                updateStockData();
+            }
+        });
+    </script>
 </body>
 </html>
