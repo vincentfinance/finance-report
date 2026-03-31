@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>環球財經簡報 | Global Finance Brief</title>
+    <title>環球財經簡報 | Global Finance Brief - 實時</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -29,6 +29,53 @@
             min-height: 100vh;
         }
         
+        /* 實時跳動動畫 */
+        @keyframes priceUp {
+            0% { color: var(--positive); transform: scale(1.1); }
+            100% { color: var(--text-primary); transform: scale(1); }
+        }
+        
+        @keyframes priceDown {
+            0% { color: var(--negative); transform: scale(1.1); }
+            100% { color: var(--text-primary); transform: scale(1); }
+        }
+        
+        .price-up {
+            animation: priceUp 0.5s ease-out;
+        }
+        
+        .price-down {
+            animation: priceDown 0.5s ease-out;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+        
+        .live-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: var(--positive);
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+            margin-right: 6px;
+        }
+        
+        .live-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--positive);
+            font-size: 0.85rem;
+            font-weight: 600;
+            background: rgba(34, 197, 94, 0.1);
+            padding: 4px 12px;
+            border-radius: 20px;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+        
         /* Header */
         .header {
             background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
@@ -38,19 +85,6 @@
             position: relative;
             overflow: hidden;
         }
-        
-        .header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: radial-gradient(ellipse at center, rgba(212,175,55,0.1) 0%, transparent 70%);
-            pointer-events: none;
-        }
-        
-        .header-content { position: relative; z-index: 1; max-width: 1200px; margin: 0 auto; }
         
         .logo {
             font-size: 2.8rem;
@@ -70,29 +104,9 @@
             margin-bottom: 20px;
         }
         
-        .meta-info {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            flex-wrap: wrap;
-            font-size: 0.9rem;
+        .update {
+            font-size: 0.95rem;
             color: var(--text-secondary);
-        }
-        
-        .meta-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .badge {
-            background: rgba(212, 175, 55, 0.15);
-            border: 1px solid var(--gold);
-            color: var(--gold);
-            padding: 6px 16px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 500;
         }
         
         /* Navigation */
@@ -135,25 +149,6 @@
             background: rgba(212, 175, 55, 0.1);
         }
         
-        .whatsapp-btn {
-            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
-            color: white !important;
-            padding: 8px 16px;
-            border-radius: 20px;
-            text-decoration: none;
-            font-size: 0.85rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            transition: transform 0.2s;
-        }
-        
-        .whatsapp-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(37, 211, 102, 0.4);
-        }
-        
         /* Main Content */
         .container {
             max-width: 1200px;
@@ -179,10 +174,6 @@
             border-bottom: 2px solid var(--border);
         }
         
-        .section-icon {
-            font-size: 1.8rem;
-        }
-        
         .section-title {
             font-size: 1.4rem;
             font-weight: 600;
@@ -190,14 +181,7 @@
             letter-spacing: -0.01em;
         }
         
-        .section-subtitle {
-            margin-left: auto;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            font-weight: 400;
-        }
-        
-        /* Market Overview Cards */
+        /* Market Cards */
         .market-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -240,6 +224,7 @@
             font-weight: 700;
             color: var(--text-primary);
             margin-bottom: 8px;
+            transition: all 0.3s ease;
         }
         
         .market-change {
@@ -250,8 +235,19 @@
             gap: 6px;
         }
         
+        .market-time {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-top: 8px;
+        }
+        
         .positive { color: var(--positive); }
         .negative { color: var(--negative); }
+        
+        .highlight {
+            color: var(--gold);
+            font-weight: 600;
+        }
         
         /* Tables */
         .data-table {
@@ -278,146 +274,19 @@
             background: rgba(255, 255, 255, 0.02);
         }
         
-        .highlight {
-            color: var(--gold);
-            font-weight: 600;
-        }
-        
-        /* Investment Strategy Section */
-        .strategy-box {
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(147, 197, 253, 0.05) 100%);
-            border: 1px solid rgba(59, 130, 246, 0.3);
-            border-radius: 12px;
-            padding: 24px;
-            margin-top: 20px;
-        }
-        
-        .strategy-title {
-            color: #60a5fa;
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .strategy-list {
-            list-style: none;
-        }
-        
-        .strategy-list li {
-            padding: 10px 0;
-            padding-left: 28px;
-            position: relative;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        
-        .strategy-list li:last-child {
-            border-bottom: none;
-        }
-        
-        .strategy-list li::before {
-            content: '▹';
-            position: absolute;
-            left: 0;
-            color: #60a5fa;
-            font-size: 1.2rem;
-        }
-        
-        /* Sources Section */
-        .sources-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 16px;
-        }
-        
-        .source-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 14px 16px;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: all 0.2s;
-        }
-        
-        .source-item:hover {
-            background: rgba(255, 255, 255, 0.06);
-            border-color: var(--border);
-        }
-        
-        .source-number {
-            background: var(--gold);
-            color: var(--dark-bg);
-            width: 24px;
-            height: 24px;
+        /* Loading */
+        .loading {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(34, 197, 94, 0.3);
+            border-top-color: var(--positive);
             border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.75rem;
-            font-weight: 700;
+            animation: spin 1s linear infinite;
         }
         
-        .source-link {
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-size: 0.9rem;
-            flex: 1;
-        }
-        
-        .source-link:hover {
-            color: var(--gold);
-        }
-        
-        .external-icon {
-            color: var(--text-secondary);
-            font-size: 0.8rem;
-        }
-        
-        /* Contact Section */
-        .contact-section {
-            background: linear-gradient(135deg, rgba(37, 211, 102, 0.1) 0%, rgba(18, 140, 126, 0.05) 100%);
-            border: 1px solid rgba(37, 211, 102, 0.3);
-            border-radius: 16px;
-            padding: 32px;
-            text-align: center;
-            margin-top: 32px;
-        }
-        
-        .contact-title {
-            font-size: 1.3rem;
-            color: #25D366;
-            margin-bottom: 12px;
-            font-weight: 600;
-        }
-        
-        .contact-desc {
-            color: var(--text-secondary);
-            margin-bottom: 20px;
-            font-size: 0.95rem;
-        }
-        
-        .whatsapp-large {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
-            color: white;
-            text-decoration: none;
-            padding: 14px 28px;
-            border-radius: 30px;
-            font-size: 1rem;
-            font-weight: 600;
-            transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
-        }
-        
-        .whatsapp-large:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4);
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
         
         /* Disclaimer */
@@ -443,38 +312,22 @@
             color: var(--text-secondary);
             font-size: 0.85rem;
         }
-        
-        .footer-brand {
-            color: var(--gold);
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-        
-        /* Responsive */
-        @media (max-width: 768px) {
-            .logo { font-size: 2rem; }
-            .nav-links { display: none; }
-            .section { padding: 24px; }
-            .market-grid { grid-template-columns: 1fr; }
-            .meta-info { flex-direction: column; gap: 10px; }
-        }
     </style>
 </head>
 <body>
-    <!-- Header -->
     <header class="header">
-        <div class="header-content">
-            <h1 class="logo">📊 環球財經簡報</h1>
-            <p class="subtitle">Global Finance Brief · Professional Market Intelligence</p>
-            <div class="meta-info">
-                <span class="meta-item">📅 March 31, 2026</span>
-                <span class="badge">每週一 9:00 AM 更新</span>
-                <span class="meta-item">🕐 數據截止: 2026-03-31 16:55 HKT</span>
-            </div>
-        </div>
+        <h1 class="logo">📊 環球財經簡報</h1>
+        <p class="subtitle">Global Finance Brief · 實時更新</p>
+        <p class="update">
+            📅 <span id="current-date"></span> | 
+            <span class="live-indicator">
+                <span class="live-dot"></span>
+                🔴 LIVE 實時數據
+            </span> | 
+            <span id="last-update">載入中...</span>
+        </p>
     </header>
 
-    <!-- Navigation -->
     <nav class="nav">
         <div class="nav-content">
             <div class="nav-links">
@@ -483,538 +336,344 @@
                 <a href="#us">美股</a>
                 <a href="#crypto">加密貨幣</a>
                 <a href="#commodities">大宗商品</a>
-                <a href="#strategy">本週方向</a>
-                <a href="#sources">資料來源</a>
             </div>
-            <a href="https://wa.me/85295812418" target="_blank" class="whatsapp-btn">
-                📱 WhatsApp 查詢
-            </a>
+            <span class="live-indicator">
+                <span class="live-dot"></span>
+                自動刷新
+            </span>
         </div>
     </nav>
 
     <main class="container">
-        <!-- Macro Section -->
         <section class="section" id="macro">
             <div class="section-header">
-                <span class="section-icon">🌍</span>
-                <h2 class="section-title">環球宏觀經濟</h2>
-                <span class="section-subtitle">Global Macro</span>
+                <span style="font-size: 1.8rem;">🌍</span>
+                <h2 class="section-title">環球宏觀 - 實時指數</h2>
             </div>
             
             <div class="market-grid">
                 <div class="market-card">
                     <div class="market-card-header">
                         <span class="market-name">🇭🇰 恆生指數</span>
-                        <span class="market-flag">HSI</span>
+                        <span class="loading" id="hsi-loading"></span>
                     </div>
-                    <div class="market-value" id="hsi-price">24,788.14</div>
-                    <div class="market-change negative" id="hsi-change">▼ +0.15%</div>
-                    <div class="market-time" style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 8px;">⏱️ 實時 | 16:55 HKT</div>
+                    <div class="market-value" id="hsi-price">--</div>
+                    <div class="market-change" id="hsi-change">--</div>
+                    <div class="market-time" id="hsi-time">更新中...</div>
                 </div>
+                
                 <div class="market-card">
                     <div class="market-card-header">
                         <span class="market-name">🇺🇸 道瓊斯</span>
-                        <span class="market-flag">DJI</span>
+                        <span class="loading" id="dow-loading"></span>
                     </div>
-                    <div class="market-value" id="dow-price">45,216.14</div>
-                    <div class="market-change positive" id="dow-change">▲ +0.11%</div>
-                    <div class="market-time" style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 8px;">⏱️ 實時 | 16:55 HKT</div>
+                    <div class="market-value" id="dow-price">--</div>
+                    <div class="market-change" id="dow-change">--</div>
+                    <div class="market-time" id="dow-time">更新中...</div>
                 </div>
+                
                 <div class="market-card">
                     <div class="market-card-header">
                         <span class="market-name">🇺🇸 納斯達克</span>
-                        <span class="market-flag">IXIC</span>
+                        <span class="loading" id="nasdaq-loading"></span>
                     </div>
-                    <div class="market-value" id="nasdaq-price">20,794.64</div>
-                    <div class="market-change negative" id="nasdaq-change">▼ -0.73%</div>
-                    <div class="market-time" style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 8px;">⏱️ 實時 | 16:55 HKT</div>
+                    <div class="market-value" id="nasdaq-price">--</div>
+                    <div class="market-change" id="nasdaq-change">--</div>
+                    <div class="market-time" id="nasdaq-time">更新中...</div>
                 </div>
+                
                 <div class="market-card">
                     <div class="market-card-header">
                         <span class="market-name">🇺🇸 標普500</span>
-                        <span class="market-flag">SPX</span>
+                        <span class="loading" id="sp500-loading"></span>
                     </div>
-                    <div class="market-value" id="sp500-price">6,343.72</div>
-                    <div class="market-change negative" id="sp500-change">▼ -0.39%</div>
-                    <div class="market-time" style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 8px;">⏱️ 實時 | 16:55 HKT</div>
+                    <div class="market-value" id="sp500-price">--</div>
+                    <div class="market-change" id="sp500-change">--</div>
+                    <div class="market-time" id="sp500-time">更新中...</div>
                 </div>
             </div>
-
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        <th>市場</th>
-                        <th>指數</th>
-                        <th>最新價</th>
-                        <th>變動</th>
-                        <th>關鍵事件</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>🇪🇺 歐洲</td>
-                        <td>STOXX 600</td>
-                        <td class="highlight">580.73</td>
-                        <td class="positive">+0.94%</td>
-                        <td>歐股反彈</td>
-                    </tr>
-                    <tr>
-                        <td>🇬🇧 英國</td>
-                        <td>富時100</td>
-                        <td>-</td>
-                        <td class="positive">+1.43%</td>
-                        <td>英股領漲歐洲</td>
-                    </tr>
-                    <tr>
-                        <td>🇨🇳 A股</td>
-                        <td>上證指數</td>
-                        <td class="highlight">3,908.28</td>
-                        <td class="negative">-0.38%</td>
-                        <td>成交額1.93萬億</td>
-                    </tr>
-                    <tr>
-                        <td>🇯🇵 日本</td>
-                        <td>日經225</td>
-                        <td>-</td>
-                        <td class="negative">-1.22%</td>
-                        <td>盤中一度跌2.5%</td>
-                    </tr>
-                </tbody>
-            </table>
         </section>
 
-        <!-- HK Stocks Section -->
-        <section class="section" id="hk">
-            <div class="section-header">
-                <span class="section-icon">🇭🇰</span>
-                <h2 class="section-title">香港股市</h2>
-                <span class="section-subtitle">Hong Kong Stocks</span>
-            </div>
-            
-            <div class="market-grid">
-                <div class="market-card">
-                    <div class="market-card-header">
-                        <span class="market-name">💰 南向資金本周流入</span>
-                    </div>
-                    <div class="market-value" style="color: var(--positive)">280億</div>
-                    <div class="market-change">港元</div>
-                </div>
-                <div class="market-card">
-                    <div class="market-card-header">
-                        <span class="market-name">📊 本月累計流入</span>
-                    </div>
-                    <div class="market-value" style="color: var(--gold)">660億+</div>
-                    <div class="market-change">港元</div>
-                </div>
-            </div>
-
-            <ul style="list-style: none; margin-top: 20px;">
-                <li style="padding: 10px 0; padding-left: 24px; position: relative;">
-                    <span style="position: absolute; left: 0; color: var(--gold)">▸</span>
-                    <span class="highlight">騰訊控股</span>：今年獲南向資金流入超 <span class="highlight">490億港元</span>，斷崖式領先
-                </li>
-                <li style="padding: 10px 0; padding-left: 24px; position: relative;">
-                    <span style="position: absolute; left: 0; color: var(--gold)">▸</span>
-                    <span class="highlight">小米集團</span>：淨流入超 <span class="highlight">230億港元</span>
-                </li>
-                <li style="padding: 10px 0; padding-left: 24px; position: relative;">
-                    <span style="position: absolute; left: 0; color: var(--gold)">▸</span>
-                    中海油、美團、阿里：各有超 <span class="highlight">70億</span> 資金淨流入
-                </li>
-                <li style="padding: 10px 0; padding-left: 24px; position: relative;">
-                    <span style="position: absolute; left: 0; color: var(--gold)">▸</span>
-                    恆生科技指數：自2025年10月高點回撤近 <span class="negative">30%</span>
-                </li>
-                <li style="padding: 10px 0; padding-left: 24px; position: relative;">
-                    <span style="position: absolute; left: 0; color: var(--gold)">▸</span>
-                    做空比例約 <span class="highlight">12%</span>，觸及歷史較高水平，極致狀態或觸發逼空行情
-                </li>
-            </ul>
-        </section>
-
-        <!-- US Market Section -->
-        <section class="section" id="us">
-            <div class="section-header">
-                <span class="section-icon">🇺🇸</span>
-                <h2 class="section-title">美國市場</h2>
-                <span class="section-subtitle">US Market</span>
-            </div>
-            
-            <ul style="list-style: none;">
-                <li style="padding: 12px 0; padding-left: 24px; position: relative; border-bottom: 1px solid rgba(255,255,255,0.05);">
-                    <span style="position: absolute; left: 0; color: var(--gold)">▸</span>
-                    <span class="highlight">英偉達 (NVDA)</span>：收跌1.40%，較2025年10月高點跌超 <span class="negative">20%</span>，正式進入熊市區域
-                </li>
-                <li style="padding: 12px 0; padding-left: 24px; position: relative; border-bottom: 1px solid rgba(255,255,255,0.05);">
-                    <span style="position: absolute; left: 0; color: var(--gold)">▸</span>
-                    <span class="highlight">芯片股集體重挫</span>：費城半導體指數跌 <span class="negative">4.2%</span>，西部數據跌超8%，美光跌超9%
-                </li>
-                <li style="padding: 12px 0; padding-left: 24px; position: relative; border-bottom: 1px solid rgba(255,255,255,0.05);">
-                    <span style="position: absolute; left: 0; color: var(--gold)">▸</span>
-                    <span class="positive">房利美 +51%</span>、<span class="positive">房地美 +47%</span>，Bill Ackman 表示股價或飆升
-                </li>
-                <li style="padding: 12px 0; padding-left: 24px; position: relative; border-bottom: 1px solid rgba(255,255,255,0.05);">
-                    <span style="position: absolute; left: 0; color: var(--gold)">▸</span>
-                    美聯儲維持利率 <span class="highlight">4.25%-4.50%</span>，放緩縮表步伐
-                </li>
-                <li style="padding: 12px 0; padding-left: 24px; position: relative;">
-                    <span style="position: absolute; left: 0; color: var(--gold)">▸</span>
-                    美以對伊戰爭進入第五周，特朗普稱願意結束軍事行動即使霍爾木茲海峽仍關閉
-                </li>
-            </ul>
-        </section>
-
-        <!-- Crypto Section -->
         <section class="section" id="crypto">
             <div class="section-header">
-                <span class="section-icon">₿</span>
-                <h2 class="section-title">加密貨幣</h2>
-                <span class="section-subtitle">Cryptocurrency</span>
+                <span style="font-size: 1.8rem;">₿</span>
+                <h2 class="section-title">加密貨幣 - 實時</h2>
             </div>
             
             <div class="market-grid">
                 <div class="market-card">
                     <div class="market-card-header">
                         <span class="market-name">Bitcoin (BTC)</span>
-                        <span style="font-size: 0.85rem; color: var(--text-secondary)">24H</span>
+                        <span class="loading" id="btc-loading"></span>
                     </div>
-                    <div class="market-value" style="font-size: 2.2rem;" id="btc-price">$66,841</div>
-                    <div class="market-change positive" id="btc-change">▲ -1.32%</div>
-                    <div style="margin-top: 12px; font-size: 0.85rem; color: var(--text-secondary);">
-                        7日: <span class="negative">-5.79%</span> | YTD: <span class="negative">-24.41%</span>
-                    </div>
-                </div>
-                <div class="market-card">
-                    <div class="market-card-header">
-                        <span class="market-name">市場情緒</span>
-                    </div>
-                    <div class="market-value" style="font-size: 1.8rem; color: var(--negative);">極度恐懼</div>
-                    <div class="market-change">Fear & Greed Index: <span class="highlight">9</span></div>
-                    <div style="margin-top: 12px; font-size: 0.85rem; color: var(--text-secondary);">
-                        ETF年內流入: <span class="highlight">$293億</span>
-                    </div>
+                    <div class="market-value" id="btc-price">--</div>
+                    <div class="market-change" id="btc-change">--</div>
+                    <div class="market-time" id="btc-time">更新中...</div>
                 </div>
             </div>
-
-            <ul style="list-style: none; margin-top: 20px;">
-                <li style="padding: 10px 0; padding-left: 24px; position: relative;">
-                    <span style="position: absolute; left: 0; color: var(--gold)">▸</span>
-                    關鍵支撐區間: <span class="highlight">$60,000 - $66,000</span>
-                </li>
-                <li style="padding: 10px 0; padding-left: 24px; position: relative;">
-                    <span style="position: absolute; left: 0; color: var(--gold)">▸</span>
-                    長期持有者: 超過460萬枚BTC（約30%持倉）現處虧損狀態
-                </li>
-                <li style="padding: 10px 0; padding-left: 24px; position: relative;">
-                    <span style="position: absolute; left: 0; color: var(--gold)">▸</span>
-                    Bitcoin Impact Index: 升至 <span class="highlight">57.4</span>（高影響區域）
-                </li>
-            </ul>
         </section>
 
-        <!-- Commodities Section -->
         <section class="section" id="commodities">
             <div class="section-header">
-                <span class="section-icon">🛢️</span>
-                <h2 class="section-title">大宗商品</h2>
-                <span class="section-subtitle">Commodities</span>
+                <span style="font-size: 1.8rem;">🛢️</span>
+                <h2 class="section-title">大宗商品 - 實時</h2>
             </div>
             
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        <th>商品</th>
-                        <th>價格</th>
-                        <th>變動</th>
-                        <th>關鍵數據</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>🛢️ WTI原油</td>
-                        <td class="highlight">$102.70</td>
-                        <td class="positive">+3%+</td>
-                        <td>自2022年以來首次收於$100上方</td>
-                    </tr>
-                    <tr>
-                        <td>🛢️ 布倫特原油</td>
-                        <td class="highlight">$109.35</td>
-                        <td class="positive">+55%</td>
-                        <td>3月創1988年以來最大單月漲幅</td>
-                    </tr>
-                    <tr>
-                        <td>🥇 現貨黃金</td>
-                        <td class="highlight">$4,601</td>
-                        <td class="positive">+2%</td>
-                        <td>一度漲破$4,600歷史新高</td>
-                    </tr>
-                    <tr>
-                        <td>🥈 白銀</td>
-                        <td class="highlight">$73</td>
-                        <td class="positive">+4%</td>
-                        <td>突破$73關口</td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <ul style="list-style: none; margin-top: 20px;">
-                <li style="padding: 10px 0; padding-left: 24px; position: relative;">
-                    <span style="position: absolute; left: 0; color: var(--gold)">▸</span>
-                    黃金關鍵位：支撐 $4,500 | 阻力 $4,700
-                </li>
-                <li style="padding: 10px 0; padding-left: 24px; position: relative;">
-                    <span style="position: absolute; left: 0; color: var(--gold)">▸</span>
-                    油價風險：若霍爾木茲海峽長期中斷，4月或推升至 <span class="highlight">$150</span>
-                </li>
-            </ul>
-        </section>
-
-        <!-- Investment Strategy Section -->
-        <section class="section" id="strategy">
-            <div class="section-header">
-                <span class="section-icon">🎯</span>
-                <h2 class="section-title">本週投資方向</h2>
-                <span class="section-subtitle">Weekly Investment Strategy</span>
-            </div>
-            
-            <div class="strategy-box">
-                <div class="strategy-title">📈 策略建議</div>
-                <ul class="strategy-list">
-                    <li><strong>港股：</strong>恆指24,000-24,800區間震盪，南向資金持續流入科技股，短線可關注騰訊、小米反彈機會</li>
-                    <li><strong>美股：</strong>芯片股承壓，建議避開半導體板塊；房利美、房地美暴漲後回調風險高，不宜追</li>
-                    <li><strong>加密貨幣：</strong>BTC處極度恐懼區域，長線投資者可考慮$60K-66K區間分批累積</li>
-                    <li><strong>大宗商品：</strong>黃金創新高後或有獲利回吐，原油受地緣政治支撐，短線偏多</li>
-                    <li><strong>外匯：</strong>美聯儲放緩縮表，美元或承壓，關注非美貨幣反彈</li>
-                </ul>
-            </div>
-
-            <div class="strategy-box" style="margin-top: 20px; background: linear-gradient(135deg, rgba(239,68,68,0.1) 0%, rgba(252,165,165,0.05) 100%); border-color: rgba(239,68,68,0.3);">
-                <div class="strategy-title" style="color: #fca5a5;">⚠️ 風險提示</div>
-                <ul class="strategy-list">
-                    <li>美以對伊戰爭持續，地緣政治風險高企</li>
-                    <li>英偉達等科技股進入熊市，或拖累整體市場情緒</li>
-                    <li>3月非農就業報告將於週五發布，或引發市場波動</li>
-                </ul>
+            <div class="market-grid">
+                <div class="market-card">
+                    <div class="market-card-header">
+                        <span class="market-name">🥇 現貨黃金</span>
+                        <span class="loading" id="gold-loading"></span>
+                    </div>
+                    <div class="market-value" id="gold-price">--</div>
+                    <div class="market-time" id="gold-time">更新中...</div>
+                </div>
+                
+                <div class="market-card">
+                    <div class="market-card-header">
+                        <span class="market-name">🛢️ WTI原油</span>
+                        <span class="loading" id="oil-loading"></span>
+                    </div>
+                    <div class="market-value" id="oil-price">--</div>
+                    <div class="market-time" id="oil-time">更新中...</div>
+                </div>
             </div>
         </section>
 
-        <!-- Sources Section -->
-        <section class="section" id="sources">
-            <div class="section-header">
-                <span class="section-icon">📚</span>
-                <h2 class="section-title">資料來源</h2>
-                <span class="section-subtitle">Data Sources</span>
-            </div>
-            
-            <div class="sources-grid">
-                <a href="https://hk.investing.com" target="_blank" class="source-item" style="text-decoration: none;">
-                    <span class="source-number">1</span>
-                    <span class="source-link">Investing.com 香港</span>
-                    <span class="external-icon">↗</span>
-                </a>
-                <a href="https://finance.sina.com.cn" target="_blank" class="source-item" style="text-decoration: none;">
-                    <span class="source-number">2</span>
-                    <span class="source-link">新浪財經</span>
-                    <span class="external-icon">↗</span>
-                </a>
-                <a href="https://news.futunn.com" target="_blank" class="source-item" style="text-decoration: none;">
-                    <span class="source-number">3</span>
-                    <span class="source-link">富途資訊 Futu News</span>
-                    <span class="external-icon">↗</span>
-                </a>
-                <a href="https://wallstreetcn.com" target="_blank" class="source-item" style="text-decoration: none;">
-                    <span class="source-number">4</span>
-                    <span class="source-link">華爾街見聞</span>
-                    <span class="external-icon">↗</span>
-                </a>
-                <a href="https://coinstats.app" target="_blank" class="source-item" style="text-decoration: none;">
-                    <span class="source-number">5</span>
-                    <span class="source-link">CoinStats</span>
-                    <span class="external-icon">↗</span>
-                </a>
-                <a href="https://www.theblockbeats.info" target="_blank" class="source-item" style="text-decoration: none;">
-                    <span class="source-number">6</span>
-                    <span class="source-link">The Block Beats</span>
-                    <span class="external-icon">↗</span>
-                </a>
-                <a href="https://energy.cngold.org" target="_blank" class="source-item" style="text-decoration: none;">
-                    <span class="source-number">7</span>
-                    <span class="source-link">金投原油網</span>
-                    <span class="external-icon">↗</span>
-                </a>
-                <a href="https://www.21jingji.com" target="_blank" class="source-item" style="text-decoration: none;">
-                    <span class="source-number">8</span>
-                    <span class="source-link">21世紀經濟報道</span>
-                    <span class="external-icon">↗</span>
-                </a>
-            </div>
-        </section>
-
-        <!-- WhatsApp Contact Section -->
-        <section class="contact-section">
-            <div class="contact-title">📱 想知更多投資資訊？</div>
-            <p class="contact-desc">直接 WhatsApp 我，獲取即時市場分析及投資建議</p>
-            <a href="https://wa.me/85295812418" target="_blank" class="whatsapp-large">
-                <span>💬</span>
-                <span>WhatsApp: +852 9581 2418</span>
-            </a>
-        </section>
-
-        <!-- Disclaimer -->
         <div class="disclaimer">
             <p class="disclaimer-text">
-                <strong>免責聲明：</strong>本報告由AI自動生成，數據截至2026年3月31日13:50 HKT，僅供參考，不構成投資建議。投資者應自行評估風險，過往表現不代表未來收益。資料來自公開渠道，不保證其準確性。
+                <strong>免責聲明：</strong>本報告數據來自公開 API（Yahoo Finance、CoinGecko），實時更新可能有延遲。僅供參考，不構成投資建議。
             </p>
         </div>
     </main>
 
-    <!-- Screenshot Button -->
-    <button onclick="generateImage()" style="position: fixed; bottom: 30px; right: 30px; background: linear-gradient(135deg, var(--gold) 0%, #B8960C 100%); color: #0a0e1a; border: none; padding: 14px 24px; border-radius: 50px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 15px rgba(212,175,55,0.4); z-index: 1000; display: flex; align-items: center; gap: 8px; font-size: 0.95rem;">
-        📸 下載圖片
-    </button>
-
-    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
-    <script>
-        function generateImage() {
-            const btn = document.querySelector('button[onclick="generateImage()"]');
-            btn.textContent = '⏳ 生成中...';
-            btn.disabled = true;
-            
-            // Hide button before capture
-            btn.style.display = 'none';
-            
-            html2canvas(document.body, {
-                width: 1200,
-                windowWidth: 1200,
-                scale: 2,
-                useCORS: true,
-                allowTaint: true,
-                backgroundColor: '#0a0e1a'
-            }).then(canvas => {
-                // Show button again
-                btn.style.display = 'flex';
-                btn.textContent = '📸 下載圖片';
-                btn.disabled = false;
-                
-                // Download
-                const link = document.createElement('a');
-                link.download = '環球財經簡報_2026-03-31.png';
-                link.href = canvas.toDataURL('image/png', 1.0);
-                link.click();
-            }).catch(err => {
-                console.error('Error:', err);
-                btn.style.display = 'flex';
-                btn.textContent = '📸 下載圖片';
-                btn.disabled = false;
-                alert('生成圖片時出錯，請重試');
-            });
-        }
-    </script>
-
-    <!-- Footer -->
     <footer class="footer">
-        <div class="footer-brand">📊 Global Finance Brief · 環球財經簡報</div>
-        <p>編制: Kimi Claw Intelligence | 每週一 9:00 AM (HKT) 更新</p>
-        <p style="margin-top: 8px;">© 2026 All Rights Reserved</p>
+        <p>📊 環球財經簡報 | 實時更新 | 每週一 9:15 AM 整合上週新聞</p>
+        <p>© 2026 Kimi Claw Intelligence</p>
     </footer>
-    <!-- Real-time Data Update Script -->
+
     <script>
-        // 簡化版實時更新 - 每30秒更新時間戳
-        const REFRESH_INTERVAL = 30000; // 每30秒
+        // 實時數據配置
+        const REFRESH_INTERVAL = 30000; // 每30秒更新
         
-        function updateTimestamp() {
+        // 數據源
+        const DATA_SOURCES = {
+            yahoo: 'https://query1.finance.yahoo.com/v8/finance/chart/',
+            crypto: 'https://api.coingecko.com/api/v3/simple/price'
+        };
+        
+        // 儲存上一次價格用嚟比較
+        const lastPrices = {};
+        
+        // 更新日期顯示
+        function updateDate() {
             const now = new Date();
-            const timeStr = now.toLocaleString('zh-HK', {
+            document.getElementById('current-date').textContent = now.toLocaleDateString('zh-HK', {
                 year: 'numeric',
-                month: '2-digit', 
-                day: '2-digit',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit'
+                month: 'long',
+                day: 'numeric',
+                weekday: 'long'
             });
-            
-            // 更新頁面頂部時間
-            const timeElements = document.querySelectorAll('.update');
-            timeElements.forEach(el => {
-                el.innerHTML = `📅 ${now.toLocaleDateString('en-US', {month: 'long', day: 'numeric', year: 'numeric'})} | <strong style="color: #22c55e;">⏱️ 實時: ${timeStr} HKT</strong> | 自動刷新中`;
-            });
-            
-            // 更新每個卡片時間
-            const cardTimes = document.querySelectorAll('.market-time');
-            cardTimes.forEach(el => {
-                el.textContent = `⏱️ 實時 | ${now.toLocaleTimeString('zh-HK', {hour: '2-digit', minute: '2-digit', second: '2-digit'})} HKT`;
-            });
-            
-            console.log('✅ 時間已更新:', timeStr);
         }
         
-        // 頁面載入時立即更新
-        updateTimestamp();
+        // 更新時間顯示
+        function updateLastUpdateTime() {
+            const now = new Date();
+            document.getElementById('last-update').textContent = 
+                '最後更新: ' + now.toLocaleTimeString('zh-HK');
+        }
         
-        // 每30秒自動更新
-        setInterval(updateTimestamp, REFRESH_INTERVAL);
-        
-        // 添加實時指示器到導航欄
-        function addLiveIndicator() {
-            const nav = document.querySelector('.nav-content');
-            if (nav && !document.getElementById('live-indicator')) {
-                const indicator = document.createElement('div');
-                indicator.id = 'live-indicator';
-                indicator.innerHTML = `
-                    <span style="display: inline-flex; align-items: center; gap: 6px; color: #22c55e; font-size: 0.85rem; font-weight: 600; background: rgba(34, 197, 94, 0.1); padding: 4px 12px; border-radius: 20px; border: 1px solid rgba(34, 197, 94, 0.3);">
-                        <span style="width: 8px; height: 8px; background: #22c55e; border-radius: 50%; animation: pulse 2s infinite;"></span>
-                        🔴 LIVE 實時更新中
-                    </span>
-                    <style>
-                        @keyframes pulse {
-                            0%, 100% { opacity: 1; }
-                            50% { opacity: 0.3; }
-                        }
-                    </style>
-                `;
-                nav.appendChild(indicator);
+        // 更新價格顯示（帶跳動效果）
+        function updatePriceWithAnimation(elementId, newPrice, oldPrice) {
+            const el = document.getElementById(elementId);
+            if (!el) return;
+            
+            // 移除舊動畫 class
+            el.classList.remove('price-up', 'price-down');
+            
+            // 格式化價格
+            let formattedPrice;
+            if (newPrice >= 1000) {
+                formattedPrice = newPrice.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            } else if (newPrice >= 1) {
+                formattedPrice = newPrice.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            } else {
+                formattedPrice = newPrice.toFixed(4);
+            }
+            
+            el.textContent = formattedPrice;
+            
+            // 如果有舊價格，比較並添加動畫
+            if (oldPrice && newPrice !== oldPrice) {
+                if (newPrice > oldPrice) {
+                    el.classList.add('price-up');
+                } else if (newPrice < oldPrice) {
+                    el.classList.add('price-down');
+                }
+                
+                // 移除 loading 動畫
+                const loadingId = elementId.replace('-price', '-loading');
+                const loadingEl = document.getElementById(loadingId);
+                if (loadingEl) loadingEl.style.display = 'none';
+            }
+            
+            // 更新時間
+            const timeId = elementId.replace('-price', '-time');
+            const timeEl = document.getElementById(timeId);
+            if (timeEl) {
+                timeEl.textContent = '⏱️ 實時 | ' + new Date().toLocaleTimeString('zh-HK');
             }
         }
         
-        // 頁面載入後添加指示器
-        setTimeout(addLiveIndicator, 1000);
-        
-        console.log('🚀 實時更新已啟動 - 每30秒自動刷新');
-                        <span style="width: 8px; height: 8px; background: #22c55e; border-radius: 50%; animation: pulse 2s infinite;"></span>
-                        實時更新中
-                    </span>
-                `;
-                nav.appendChild(indicator);
-            }
+        // 更新變動顯示
+        function updateChange(elementId, changePercent) {
+            const el = document.getElementById(elementId);
+            if (!el) return;
+            
+            const isPositive = changePercent >= 0;
+            const arrow = isPositive ? '▲' : '▼';
+            const sign = isPositive ? '+' : '';
+            
+            el.innerHTML = `${arrow} ${sign}${changePercent.toFixed(2)}%`;
+            el.className = 'market-change ' + (isPositive ? 'positive' : 'negative');
         }
         
-        // 添加脈衝動畫
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes pulse {
-                0%, 100% { opacity: 1; transform: scale(1); }
-                50% { opacity: 0.5; transform: scale(1.1); }
+        // 從 Yahoo Finance 獲取數據
+        async function fetchYahooData(symbol, name) {
+            try {
+                const url = `${DATA_SOURCES.yahoo}${symbol}?interval=1m&range=1d`;
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (data.chart && data.chart.result && data.chart.result[0]) {
+                    const meta = data.chart.result[0].meta;
+                    const price = meta.regularMarketPrice || meta.previousClose || 0;
+                    const prev = meta.previousClose || price;
+                    const change = prev ? ((price - prev) / prev * 100) : 0;
+                    
+                    return { price, change, prev };
+                }
+            } catch (e) {
+                console.error(`獲取 ${name} 失敗:`, e);
             }
-        `;
-        document.head.appendChild(style);
+            return null;
+        }
+        
+        // 從 CoinGecko 獲取 Crypto 數據
+        async function fetchCryptoData() {
+            try {
+                const url = `${DATA_SOURCES.crypto}?ids=bitcoin&vs_currencies=usd&include_24hr_change=true`;
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (data.bitcoin) {
+                    return {
+                        price: data.bitcoin.usd,
+                        change: data.bitcoin.usd_24h_change || 0
+                    };
+                }
+            } catch (e) {
+                console.error('獲取 BTC 失敗:', e);
+            }
+            return null;
+        }
+        
+        // 獲取商品數據
+        async function fetchCommodityData(symbol) {
+            try {
+                const url = `${DATA_SOURCES.yahoo}${symbol}?interval=1d&range=1d`;
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (data.chart && data.chart.result && data.chart.result[0]) {
+                    const meta = data.chart.result[0].meta;
+                    return { price: meta.regularMarketPrice || 0 };
+                }
+            } catch (e) {
+                console.error(`獲取 ${symbol} 失敗:`, e);
+            }
+            return null;
+        }
+        
+        // 更新所有數據
+        async function updateAllData() {
+            console.log('🔄 更新實時數據...', new Date().toLocaleTimeString('zh-HK'));
+            
+            // 港股 - 恆生指數
+            const hsi = await fetchYahooData('%5EHSI', 'HSI');
+            if (hsi) {
+                updatePriceWithAnimation('hsi-price', hsi.price, lastPrices.hsi);
+                updateChange('hsi-change', hsi.change);
+                lastPrices.hsi = hsi.price;
+            }
+            
+            // 美股 - 道指
+            const dow = await fetchYahooData('%5EDJI', 'DJI');
+            if (dow) {
+                updatePriceWithAnimation('dow-price', dow.price, lastPrices.dow);
+                updateChange('dow-change', dow.change);
+                lastPrices.dow = dow.price;
+            }
+            
+            // 納指
+            const nasdaq = await fetchYahooData('%5EIXIC', 'NASDAQ');
+            if (nasdaq) {
+                updatePriceWithAnimation('nasdaq-price', nasdaq.price, lastPrices.nasdaq);
+                updateChange('nasdaq-change', nasdaq.change);
+                lastPrices.nasdaq = nasdaq.price;
+            }
+            
+            // 標普500
+            const sp500 = await fetchYahooData('%5EGSPC', 'SP500');
+            if (sp500) {
+                updatePriceWithAnimation('sp500-price', sp500.price, lastPrices.sp500);
+                updateChange('sp500-change', sp500.change);
+                lastPrices.sp500 = sp500.price;
+            }
+            
+            // Bitcoin
+            const btc = await fetchCryptoData();
+            if (btc) {
+                updatePriceWithAnimation('btc-price', btc.price, lastPrices.btc);
+                updateChange('btc-change', btc.change);
+                lastPrices.btc = btc.price;
+            }
+            
+            // 黃金
+            const gold = await fetchCommodityData('GC%3DF');
+            if (gold) {
+                updatePriceWithAnimation('gold-price', gold.price, lastPrices.gold);
+                lastPrices.gold = gold.price;
+            }
+            
+            // 原油
+            const oil = await fetchCommodityData('CL%3DF');
+            if (oil) {
+                updatePriceWithAnimation('oil-price', oil.price, lastPrices.oil);
+                lastPrices.oil = oil.price;
+            }
+            
+            updateLastUpdateTime();
+            console.log('✅ 數據更新完成');
+        }
         
         // 初始化
         document.addEventListener('DOMContentLoaded', () => {
-            console.log('🚀 啟動實時數據更新...');
-            addLiveIndicator();
-            updateStockData(); // 立即更新一次
+            updateDate();
             
-            // 定時更新
-            setInterval(updateStockData, REFRESH_INTERVAL);
+            // 立即更新一次
+            updateAllData();
             
-            // 每10秒更新時間
-            setInterval(updateTimestamp, 10000);
+            // 每30秒自動更新
+            setInterval(updateAllData, REFRESH_INTERVAL);
+            
+            console.log('🚀 實時數據系統已啟動');
         });
         
-        // 頁面可見時立即更新
+        // 頁面重新可見時立即更新
         document.addEventListener('visibilitychange', () => {
             if (document.visibilityState === 'visible') {
-                updateStockData();
+                updateAllData();
             }
         });
     </script>
